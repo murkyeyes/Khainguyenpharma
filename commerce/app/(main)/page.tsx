@@ -3,8 +3,8 @@ import { ThreeItemGrid } from "components/grid/three-items";
 import Footer from "components/layout/footer";
 import Image from "next/image";
 import Link from "next/link";
-import { CategoryItem } from "./components/CategoryItem";
-import { RippleText } from "./components/RippleText";
+import { CategoryItem } from "../components/CategoryItem";
+import { RippleText } from "../components/RippleText";
 
 export const metadata = {
   title: "Khải Nguyên Pharma - Dược phẩm uy tín",
