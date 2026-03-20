@@ -41,7 +41,14 @@ async function apiFetch<T>({
     }
 
     const data = await response.json();
-    return data;
+    
+    // Fix image URLs that might point to localhost
+    const fixedData = JSON.parse(JSON.stringify(data).replace(
+      /http:\/\/localhost:3001/g, 
+      'https://khainguyenpharma.onrender.com'
+    ));
+
+    return fixedData;
   } catch (error) {
     console.error('API Fetch Error:', error);
     throw error;
