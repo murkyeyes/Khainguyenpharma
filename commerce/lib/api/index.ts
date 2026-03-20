@@ -64,9 +64,13 @@ export async function getProducts({
   if (reverse !== undefined) params.append('reverse', String(reverse));
 
   const endpoint = `/api/products${params.toString() ? `?${params.toString()}` : ''}`;
-  const data = await apiFetch<{ products: Product[] }>({ endpoint });
-  
-  return data.products;
+  try {
+    const data = await apiFetch<{ products: Product[] }>({ endpoint });
+    return data.products || [];
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
@@ -93,10 +97,15 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 
 // Collection Functions
 export async function getCollections(): Promise<Collection[]> {
-  const data = await apiFetch<{ collections: Collection[] }>({ 
-    endpoint: '/api/collections' 
-  });
-  return data.collections;
+  try {
+    const data = await apiFetch<{ collections: Collection[] }>({ 
+      endpoint: '/api/collections' 
+    });
+    return data.collections;
+  } catch (error) {
+    console.error('Error fetching collections:', error);
+    return [];
+  }
 }
 
 export async function getCollection(handle: string): Promise<Collection | undefined> {
@@ -124,9 +133,13 @@ export async function getCollectionProducts({
   if (reverse !== undefined) params.append('reverse', String(reverse));
 
   const endpoint = `/api/collections/${collection}/products${params.toString() ? `?${params.toString()}` : ''}`;
-  const data = await apiFetch<{ products: Product[] }>({ endpoint });
-  
-  return data.products;
+  try {
+    const data = await apiFetch<{ products: Product[] }>({ endpoint });
+    return data.products;
+  } catch (error) {
+    console.error(`Error fetching products for collection ${collection}:`, error);
+    return [];
+  }
 }
 
 // Cart Functions
@@ -197,26 +210,41 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 }
 
 // Page Functions
-export async function getPage(handle: string): Promise<Page> {
-  const data = await apiFetch<{ page: Page }>({ 
-    endpoint: `/api/pages/${handle}` 
-  });
-  return data.page;
+export async function getPage(handle: string): Promise<Page | undefined> {
+  try {
+    const data = await apiFetch<{ page: Page }>({ 
+      endpoint: `/api/pages/${handle}` 
+    });
+    return data.page;
+  } catch (error) {
+    console.error(`Error fetching page ${handle}:`, error);
+    return undefined;
+  }
 }
 
 export async function getPages(): Promise<Page[]> {
-  const data = await apiFetch<{ pages: Page[] }>({ 
-    endpoint: '/api/pages' 
-  });
-  return data.pages;
+  try {
+    const data = await apiFetch<{ pages: Page[] }>({ 
+      endpoint: '/api/pages' 
+    });
+    return data.pages;
+  } catch (error) {
+    console.error('Error fetching pages:', error);
+    return [];
+  }
 }
 
 // Menu Functions
 export async function getMenu(handle: string): Promise<Menu[]> {
-  const data = await apiFetch<{ menu: Menu[] }>({ 
-    endpoint: `/api/menu/${handle}` 
-  });
-  return data.menu;
+  try {
+    const data = await apiFetch<{ menu: Menu[] }>({ 
+      endpoint: `/api/menu/${handle}` 
+    });
+    return data.menu || [];
+  } catch (error) {
+    console.error(`Error fetching menu ${handle}:`, error);
+    return [];
+  }
 }
 
 // Revalidation Handler
