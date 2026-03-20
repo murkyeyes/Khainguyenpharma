@@ -1,0 +1,95 @@
+﻿node.exe : Debugger listening on 
+ws://127.0.0.1:51574/bb9a194a-c744-4118-8f18-2ba6a07eeb41
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Debugger list 
+   en...18-2ba6a07eeb41:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+Debugger listening on 
+ws://127.0.0.1:51578/5f15d088-cab4-407f-852b-6d1b18dfe1e4
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+ â Attempted to load @next/swc-win32-x64-msvc, but an 
+error occurred: A dynamic link library (DLL) 
+initialization routine failed.
+\\?\D:\deploy_web\Khainguyenpharma\commerce\node_modules\.p
+npm\@next+swc-win32-x64-msvc@15.5.7\node_modules\@next\swc-
+win32-x64-msvc\next-swc.win32-x64-msvc.node
+   â–² Next.js 15.5.9
+   - Environments: .env
+
+   Creating an optimized production build ...
+Debugger listening on 
+ws://127.0.0.1:63018/7dfe1843-7eac-4265-8edc-f1282903f9b4
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+ â Attempted to load @next/swc-win32-x64-msvc, but an 
+error occurred: A dynamic link library (DLL) 
+initialization routine failed.
+\\?\D:\deploy_web\Khainguyenpharma\commerce\node_modules\.p
+npm\@next+swc-win32-x64-msvc@15.5.7\node_modules\@next\swc-
+win32-x64-msvc\next-swc.win32-x64-msvc.node
+Debugger listening on 
+ws://127.0.0.1:63699/c388fd0f-12b0-4023-b6b3-f3cebfdc536a
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+ â Attempted to load @next/swc-win32-x64-msvc, but an 
+error occurred: A dynamic link library (DLL) 
+initialization routine failed.
+\\?\D:\deploy_web\Khainguyenpharma\commerce\node_modules\.p
+npm\@next+swc-win32-x64-msvc@15.5.7\node_modules\@next\swc-
+win32-x64-msvc\next-swc.win32-x64-msvc.node
+Debugger listening on 
+ws://127.0.0.1:63702/504fbbac-6c95-4a3e-8f71-7a4a35a45b1b
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+ â Attempted to load @next/swc-win32-x64-msvc, but an 
+error occurred: A dynamic link library (DLL) 
+initialization routine failed.
+\\?\D:\deploy_web\Khainguyenpharma\commerce\node_modules\.p
+npm\@next+swc-win32-x64-msvc@15.5.7\node_modules\@next\swc-
+win32-x64-msvc\next-swc.win32-x64-msvc.node
+ âœ“ Compiled successfully in 4.3s
+   Linting and checking validity of types ...
+Debugger listening on 
+ws://127.0.0.1:63706/e4ed3cd7-1d22-43a2-b2c8-cf9471c67a9d
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger listening on 
+ws://127.0.0.1:63707/47bb76ea-5904-4817-af95-a0594392c9f3
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+Debugger attached.
+Failed to compile.
+
+./components/product/product-description.tsx:19:24
+Type error: Type 'ProductOption[] | undefined' is not 
+assignable to type 'ProductOption[]'.
+  Type 'undefined' is not assignable to type 
+'ProductOption[]'.
+
+[0m [90m 17 |[39m         
+[33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 18 |[39m       
+[33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 19 |[39m       
+[33m<[39m[33mVariantSelector[39m 
+options[33m=[39m{product[33m.[39moptions} 
+variants[33m=[39m{product[33m.[39mvariants} 
+[33m/[39m[33m>[39m
+ [90m    |[39m                        
+[31m[1m^[22m[39m
+ [90m 20 |[39m       {product[33m.[39mdescriptionHtml 
+[33m?[39m (
+ [90m 21 |[39m         [33m<[39m[33mProse[39m
+ [90m 22 |[39m           className[33m=[39m[32m"mb-6 
+text-sm leading-tight dark:text-white/[60%]"[39m[0m
+Waiting for the debugger to disconnect...
+Next.js build worker exited with code: 1 and signal: null
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...

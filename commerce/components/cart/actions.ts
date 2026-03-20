@@ -124,7 +124,7 @@ export async function redirectToCheckout() {
   const cartId = (await cookies()).get("cartId")?.value;
   
   if (!cartId) {
-    return "Missing cart ID";
+    return;
   }
 
   let cart = await getCart(cartId);
