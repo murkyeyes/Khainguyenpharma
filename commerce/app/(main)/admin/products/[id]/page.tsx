@@ -34,7 +34,7 @@ export default function EditProductPage() {
 
   const fetchCollections = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/collections');
+      const response = await fetch('https://khainguyenpharma.onrender.com/api/collections');
       const data = await response.json();
       setCollections(data.collections || []);
     } catch (error) {
@@ -44,7 +44,7 @@ export default function EditProductPage() {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${productId}`);
+      const response = await fetch(`https://khainguyenpharma.onrender.com/api/products/${productId}`);
       const data = await response.json();
       
       setProduct(data.product);
@@ -88,7 +88,7 @@ export default function EditProductPage() {
       const token = localStorage.getItem('admin_token');
 
       // 1. Update product
-      const productResponse = await fetch(`http://localhost:3001/api/admin/products/${productId}`, {
+      const productResponse = await fetch(`https://khainguyenpharma.onrender.com/api/admin/products/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ export default function EditProductPage() {
         imageFormData.append('altText', formData.title);
 
         const imageResponse = await fetch(
-          `http://localhost:3001/api/admin/products/${formData.handle}/images`,
+          `https://khainguyenpharma.onrender.com/api/admin/products/${formData.handle}/images`,
           {
             method: 'POST',
             headers: {

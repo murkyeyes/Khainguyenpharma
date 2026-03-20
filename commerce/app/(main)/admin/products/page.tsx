@@ -24,7 +24,7 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/products');
+      const response = await fetch('https://khainguyenpharma.onrender.com/api/products');
       const data = await response.json();
       setProducts(data.products || []);
     } catch (error) {
@@ -41,7 +41,7 @@ export default function AdminProductsPage() {
 
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`http://localhost:3001/api/admin/products/${id}`, {
+      const response = await fetch(`https://khainguyenpharma.onrender.com/api/admin/products/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

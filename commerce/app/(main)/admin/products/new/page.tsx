@@ -27,7 +27,7 @@ export default function NewProductPage() {
 
   const fetchCollections = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/collections');
+      const response = await fetch('https://khainguyenpharma.onrender.com/api/collections');
       const data = await response.json();
       setCollections(data.collections || []);
     } catch (error) {
@@ -55,7 +55,7 @@ export default function NewProductPage() {
       const token = localStorage.getItem('admin_token');
 
       // 1. Create product
-      const productResponse = await fetch('http://localhost:3001/api/admin/products', {
+      const productResponse = await fetch('https://khainguyenpharma.onrender.com/api/admin/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export default function NewProductPage() {
         imageFormData.append('altText', formData.title);
 
         const imageResponse = await fetch(
-          `http://localhost:3001/api/admin/products/${productHandle}/images`,
+          `https://khainguyenpharma.onrender.com/api/admin/products/${productHandle}/images`,
           {
             method: 'POST',
             headers: {

@@ -16,15 +16,15 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     try {
       // Fetch products count
-      const productsRes = await fetch('http://localhost:3001/api/products');
+      const productsRes = await fetch('https://khainguyenpharma.onrender.com/api/products');
       const productsData = await productsRes.json();
       
       // Fetch collections count
-      const collectionsRes = await fetch('http://localhost:3001/api/collections');
+      const collectionsRes = await fetch('https://khainguyenpharma.onrender.com/api/collections');
       const collectionsData = await collectionsRes.json();
 
       // Fetch pages count
-      const pagesRes = await fetch('http://localhost:3001/api/pages');
+      const pagesRes = await fetch('https://khainguyenpharma.onrender.com/api/pages');
       const pagesData = await pagesRes.json();
 
       setStats({
