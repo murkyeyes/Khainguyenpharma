@@ -1,5 +1,5 @@
 import { TAGS } from 'lib/constants';
-import { revalidateTag, unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import type { Cart, Collection, Menu, Page, Product } from './types';
@@ -58,10 +58,6 @@ export async function getProducts({
   sortKey?: string;
   reverse?: boolean;
 }): Promise<Product[]> {
-  'use cache';
-  cacheLife('hours');
-  cacheTag(TAGS.products);
-
   const params = new URLSearchParams();
   if (query) params.append('query', query);
   if (sortKey) params.append('sortKey', sortKey);
@@ -74,10 +70,6 @@ export async function getProducts({
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
-  'use cache';
-  cacheLife('hours');
-  cacheTag(TAGS.products);
-
   try {
     const data = await apiFetch<{ product: Product }>({ 
       endpoint: `/api/products/${handle}` 
@@ -89,9 +81,6 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 }
 
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
-  'use cache';
-  cacheLife('hours');
-
   try {
     const data = await apiFetch<{ products: Product[] }>({ 
       endpoint: `/api/products/${productId}/recommendations` 
@@ -104,10 +93,6 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 
 // Collection Functions
 export async function getCollections(): Promise<Collection[]> {
-  'use cache';
-  cacheLife('hours');
-  cacheTag(TAGS.collections);
-
   const data = await apiFetch<{ collections: Collection[] }>({ 
     endpoint: '/api/collections' 
   });
@@ -115,10 +100,6 @@ export async function getCollections(): Promise<Collection[]> {
 }
 
 export async function getCollection(handle: string): Promise<Collection | undefined> {
-  'use cache';
-  cacheLife('hours');
-  cacheTag(TAGS.collections);
-
   try {
     const data = await apiFetch<{ collection: Collection }>({ 
       endpoint: `/api/collections/${handle}` 
@@ -138,10 +119,6 @@ export async function getCollectionProducts({
   sortKey?: string;
   reverse?: boolean;
 }): Promise<Product[]> {
-  'use cache';
-  cacheLife('hours');
-  cacheTag(TAGS.collections);
-
   const params = new URLSearchParams();
   if (sortKey) params.append('sortKey', sortKey);
   if (reverse !== undefined) params.append('reverse', String(reverse));
@@ -208,9 +185,6 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
     return undefined;
   }
 
-  'use cache';
-  cacheTag(TAGS.cart);
-
   try {
     const data = await apiFetch<{ cart: Cart }>({
       endpoint: `/api/cart/${cartId}`,
@@ -224,9 +198,6 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 
 // Page Functions
 export async function getPage(handle: string): Promise<Page> {
-  'use cache';
-  cacheLife('hours');
-
   const data = await apiFetch<{ page: Page }>({ 
     endpoint: `/api/pages/${handle}` 
   });
@@ -234,9 +205,6 @@ export async function getPage(handle: string): Promise<Page> {
 }
 
 export async function getPages(): Promise<Page[]> {
-  'use cache';
-  cacheLife('hours');
-
   const data = await apiFetch<{ pages: Page[] }>({ 
     endpoint: '/api/pages' 
   });
@@ -245,9 +213,6 @@ export async function getPages(): Promise<Page[]> {
 
 // Menu Functions
 export async function getMenu(handle: string): Promise<Menu[]> {
-  'use cache';
-  cacheLife('hours');
-
   const data = await apiFetch<{ menu: Menu[] }>({ 
     endpoint: `/api/menu/${handle}` 
   });
