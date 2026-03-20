@@ -60,7 +60,7 @@ export function SearchFilters({ collections }: { collections: Collection[] }) {
           onChange={(e) => handleSortChange(e.target.value)}
         >
           {sorting.map((item) => (
-            <option key={item.slug} value={item.slug}>
+            <option key={item.slug ?? ''} value={item.slug ?? ''}>
               {item.title}
             </option>
           ))}
