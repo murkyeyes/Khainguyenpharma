@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/container-queries";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --color-primary: #0066cc;
+  --color-primary-dark: #004999;
+  --color-secondary: #ff6600;
+  --color-light-blue: #e6f2ff;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+  
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
+
+/* Force light mode */
+html {
+  color-scheme: light !important;
+}
+
+html.dark {
+  color-scheme: light !important;
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading="lazy"] {
+    clip-path: inset(0.6px);
+  }
+}
+
+a,
+input,
+button {
+  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2;
+}
+
+/* Glassmorphism Water Ripple Effect - Exact Figma Settings */
+.water-ripple {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ripple-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Corner radius: 50 (full circle) */
+  border-radius: 50%;
+  /* Stroke: Outside, Weight 1, Linear 100% */
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* Fill: Almost transparent to see background */
+  background: rgba(255, 255, 255, 0.005);
+  /* Light blur to maintain background visibility */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  /* Drop shadow: X 0, Y 4, Blur 4, Spread 0, #000000 25% */
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  /* Opacity: 100% */
+  opacity: 1;
+  animation: ripple-wave 2s ease-out forwards;
+}
+
+/* Water Distortion Effect - Lighter warping */
+.water-distortion {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  backdrop-filter: blur(3px) brightness(1.05);
+  -webkit-backdrop-filter: blur(3px) brightness(1.05);
+  animation: water-distort 3.5s ease-out forwards;
+  z-index: -1;
+}
+
+.ripple-ring.ring-1 {
+  animation-delay: 0s;
+}
+
+.ripple-ring.ring-2 {
+  animation-delay: 1s;
+}
+
+.ripple-ring.ring-3 {
+  animation-delay: 2s;
+}
+
+@keyframes ripple-wave {
+  0% {
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+@keyframes water-distort {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    width: 220px;
+    height: 220px;
+    opacity: 0;
+    backdrop-filter: blur(4px) brightness(1.08);
+  }
+}
