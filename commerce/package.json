@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages@1",
+    "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "prettier": "prettier --write --ignore-unknown .",
     "prettier:check": "prettier --check --ignore-unknown .",
