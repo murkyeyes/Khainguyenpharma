@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { getCollections, getPages, getProducts } from "lib/api";
 import { baseUrl, validateEnvironmentVariables } from "lib/utils";
 import { MetadataRoute } from "next";
