@@ -8,7 +8,7 @@ const pool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   // Thêm cấu hình SSL cho Supabase/Render
-  ssl: process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production' ? {
+  ssl: process.env.DB_HOST !== 'localhost' ? {
     rejectUnauthorized: false
   } : false
 });

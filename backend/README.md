@@ -13,7 +13,7 @@ Backend REST API cho hệ thống E-commerce Khai Nguyen Pharma.
 ```bash
 npm install
 ```
-ádasdasdasd
+
 ### 2. Cấu Hình Database
 Tạo file `.env` từ `.env.example` và điền thông tin PostgreSQL của bạn:
 ```bash

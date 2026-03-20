@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS product_images (
   alt_text VARCHAR(255),
   width INTEGER DEFAULT 800,
   height INTEGER DEFAULT 800,
-  position INTEGER DEFAULT 0
+  position INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Product Variants Table
