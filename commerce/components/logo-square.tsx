@@ -2,7 +2,7 @@ import clsx from "clsx";
 import Image from "next/image";
 
 export default function LogoSquare({ size }: { size?: "sm" | undefined }) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
   
   return (
     <div

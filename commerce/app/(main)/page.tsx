@@ -16,7 +16,7 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
   
   return (
     <div className="w-full">
