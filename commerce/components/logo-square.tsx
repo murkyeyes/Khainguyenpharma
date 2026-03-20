@@ -2,26 +2,18 @@ import clsx from "clsx";
 import Image from "next/image";
 
 export default function LogoSquare({ size }: { size?: "sm" | undefined }) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
-  
+  // Use a hardcoded inline SVG for logo to avoid backend dependency and potential Vercel logo
   return (
     <div
       className={clsx(
-        "flex flex-none items-center justify-center",
+        "flex flex-none items-center justify-center rounded-lg bg-blue-600 text-white font-bold",
         {
-          "h-[40px] w-[40px]": !size,
-          "h-[30px] w-[30px]": size === "sm",
+          "h-[40px] w-[40px] text-lg": !size,
+          "h-[30px] w-[30px] text-sm": size === "sm",
         },
       )}
     >
-      <Image
-        src={`${backendUrl}/uploads/products/logo.png`}
-        alt="Khai Nguyen Pharma Logo"
-        width={size === "sm" ? 30 : 40}
-        height={size === "sm" ? 30 : 40}
-        className="object-contain"
-        priority
-      />
+      KN
     </div>
   );
 }
