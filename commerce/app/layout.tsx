@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import { GeistSans } from "geist/font/sans";
 import { ReactNode } from "react";
 import "./globals.css";

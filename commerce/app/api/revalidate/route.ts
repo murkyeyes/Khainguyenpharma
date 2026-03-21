@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import { revalidate } from "lib/api";
 import { NextRequest, NextResponse } from "next/server";
 
