@@ -5,7 +5,8 @@ import LogoSquare from "components/logo-square";
 import { getMenu } from "lib/api";
 import { Suspense } from "react";
 
-const { COMPANY_NAME, SITE_NAME } = process.env;
+const COMPANY_NAME = (typeof process !== 'undefined' && process.env?.COMPANY_NAME) || 'Khải Nguyên Pharma';
+const SITE_NAME = (typeof process !== 'undefined' && process.env?.SITE_NAME) || 'Khải Nguyên Pharma';
 
 export default async function Footer() {
   const currentYear = new Date().getFullYear();

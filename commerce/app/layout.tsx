@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import "./globals.css";
 import { baseUrl } from "lib/utils";
 
-const { SITE_NAME } = process.env;
+const SITE_NAME = (typeof process !== 'undefined' && process.env?.SITE_NAME) || 'Khải Nguyên Pharma';
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
