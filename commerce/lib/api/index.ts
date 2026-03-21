@@ -4,7 +4,9 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import type { Cart, Collection, Menu, Page, Product } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://khainguyenpharma.onrender.com';
+const API_URL = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) 
+  ? process.env.NEXT_PUBLIC_API_URL 
+  : 'https://khainguyenpharma.onrender.com';
 
 async function apiFetch<T>({
   endpoint,
@@ -142,7 +144,7 @@ export async function getCollectionProducts({
   const endpoint = `/api/collections/${collection}/products${params.toString() ? `?${params.toString()}` : ''}`;
   try {
     const data = await apiFetch<{ products: Product[] }>({ endpoint });
-    return data.products;
+    return data.products || [];
   } catch (error) {
     console.error(`Error fetching products for collection ${collection}:`, error);
     return [];
