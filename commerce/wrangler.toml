@@ -1,0 +1,8 @@
+name = "khainguyenpharma-commerce"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[vars]
+# Mặc định là Render, nhưng nên set trong Cloudflare Dashboard để bảo mật và chính xác hơn
+NEXT_PUBLIC_BACKEND_URL = "https://khainguyenpharma.onrender.com"
