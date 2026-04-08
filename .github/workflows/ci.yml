@@ -1,0 +1,36 @@
+name: CI for Commerce
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./commerce
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Phiên bản Node.js Next 15 khuyên dùng
+        cache: 'npm'
+        cache-dependency-path: './commerce/package-lock.json'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run Linter
+      run: npm run lint
+
+    - name: Type Check
+      run: npx tsc --noEmit
+
+    - name: Run Build
+      run: npm run build

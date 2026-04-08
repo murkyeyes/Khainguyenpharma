@@ -15,13 +15,6 @@ exports.createProduct = async (req, res) => {
       collectionIds = []
     } = req.body;
 
-    // Validate required fields
-    if (!handle || !title || !priceAmount) {
-      return res.status(400).json({ 
-        error: 'Handle, title và giá là bắt buộc' 
-      });
-    }
-
     // Check if handle already exists
     const existing = await pool.query(
       'SELECT id FROM products WHERE handle = $1',

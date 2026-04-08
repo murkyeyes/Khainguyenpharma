@@ -17,18 +17,18 @@ export default function Icon() {
       <div
         style={{
           fontSize: 20,
-          background: '#0066cc', // Brand primary blue
+          background: '#1a3a7a', // Professional Navy Blue
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           color: 'white',
-          borderRadius: 8, // Rounded corners
+          borderRadius: 6, // Slightly sharper corners for a corporate look
           fontWeight: 'bold',
         }}
       >
-        KN
+        KXN
       </div>
     ),
     // ImageResponse options

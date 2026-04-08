@@ -1,5 +1,5 @@
 import CartModal from "components/cart/modal";
-import LogoSquare from "components/logo-square";
+import Image from "next/image";
 import { getMenu } from "lib/api";
 import { Menu } from "lib/shopify/types";
 import Link from "next/link";
@@ -7,7 +7,8 @@ import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search, { SearchSkeleton } from "./search";
 
-const { SITE_NAME } = process.env;
+const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
+const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
 
 export async function Navbar() {
   const menu = await getMenu("next-js-frontend-header-menu");
@@ -20,15 +21,18 @@ export async function Navbar() {
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between py-3 gap-4">
-            {/* Logo */}
-            <div className="flex items-center flex-shrink-0">
-              <Link href="/" prefetch={true} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <LogoSquare />
-                <div className="text-lg font-bold text-blue-600 uppercase hidden lg:block">
-                  {SITE_NAME}
-                </div>
-              </Link>
-            </div>
+             <div className="flex items-center flex-shrink-0">
+               <Link href="/" prefetch={true} className="flex items-center hover:opacity-80 transition-opacity">
+                 <Image 
+                   src={`${backendUrl}/uploads/products/logo.png`} 
+                   alt={SITE_NAME || "Khải Nguyên Pharma"}
+                   width={200}
+                   height={50}
+                   className="h-10 md:h-12 w-auto object-contain"
+                   priority
+                 />
+               </Link>
+             </div>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-6">

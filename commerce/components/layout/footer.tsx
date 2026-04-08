@@ -1,12 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import FooterMenu from "components/layout/footer-menu";
-import LogoSquare from "components/logo-square";
 import { getMenu } from "lib/api";
 import { Suspense } from "react";
 
-const COMPANY_NAME = (typeof process !== 'undefined' && process.env?.COMPANY_NAME) || 'Khải Nguyên Pharma';
-const SITE_NAME = (typeof process !== 'undefined' && process.env?.SITE_NAME) || 'Khải Nguyên Pharma';
+const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
+const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
+const COMPANY_NAME = process.env?.COMPANY_NAME || 'Khải Nguyên Pharma';
 
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
@@ -21,11 +22,16 @@ export default async function Footer() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 border-t border-neutral-200 px-6 py-12 text-sm md:flex-row md:gap-12 md:px-4 min-[1320px]:px-0">
         <div>
           <Link
-            className="flex items-center gap-2 text-blue-600 md:pt-1"
+            className="flex items-center hover:opacity-80 transition-opacity"
             href="/"
           >
-            <LogoSquare size="sm" />
-            <span className="uppercase font-bold">{SITE_NAME}</span>
+            <Image 
+              src={`${backendUrl}/uploads/products/logo.png`} 
+              alt={SITE_NAME || "Khải Nguyên Pharma"}
+              width={180}
+              height={60}
+              className="h-10 w-auto object-contain"
+            />
           </Link>
         </div>
         <Suspense

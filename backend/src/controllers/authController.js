@@ -10,11 +10,6 @@ exports.register = async (req, res) => {
   try {
     const { email, password, fullName, role = 'customer' } = req.body;
 
-    // Validate input
-    if (!email || !password || !fullName) {
-      return res.status(400).json({ error: 'Email, password và họ tên là bắt buộc' });
-    }
-
     // Check if user already exists
     const existingUser = await pool.query(
       'SELECT id FROM users WHERE email = $1',
@@ -58,11 +53,6 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Validate input
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email và password là bắt buộc' });
-    }
 
     // Find user
     const result = await pool.query(
