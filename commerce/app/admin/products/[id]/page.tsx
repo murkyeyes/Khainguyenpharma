@@ -142,7 +142,12 @@ export default function EditProductPage() {
           );
 
           if (!imageResponse.ok) {
-            console.error(`Image ${file.name} upload failed`);
+            try {
+              const errData = await imageResponse.json();
+              console.error(`Image ${file.name} upload failed:`, errData);
+            } catch(e) {
+              console.error(`Image ${file.name} upload failed, status: ${imageResponse.status}`);
+            }
           }
         }
       }
