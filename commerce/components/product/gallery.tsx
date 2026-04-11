@@ -44,25 +44,23 @@ export function Gallery({
         )}
 
         {images.length > 1 ? (
-          <div className="absolute bottom-[15%] flex w-full justify-center">
-            <div className="mx-auto flex h-11 items-center rounded-full border border-white bg-neutral-50/80 text-neutral-500 backdrop-blur-sm dark:border-black dark:bg-neutral-900/80">
-              <button
-                formAction={() => updateImage(previousImageIndex.toString())}
-                aria-label="Previous product image"
-                className={buttonClassName}
-              >
-                <ArrowLeftIcon className="h-5" />
-              </button>
-              <div className="mx-1 h-6 w-px bg-neutral-500"></div>
-              <button
-                formAction={() => updateImage(nextImageIndex.toString())}
-                aria-label="Next product image"
-                className={buttonClassName}
-              >
-                <ArrowRightIcon className="h-5" />
-              </button>
-            </div>
-          </div>
+          <>
+            <button
+              formAction={() => updateImage(previousImageIndex.toString())}
+              aria-label="Previous product image"
+              className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/60 text-gray-800 shadow-sm backdrop-blur-md transition-all hover:scale-110 hover:bg-white/90"
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+            </button>
+            
+            <button
+              formAction={() => updateImage(nextImageIndex.toString())}
+              aria-label="Next product image"
+              className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/60 text-gray-800 shadow-sm backdrop-blur-md transition-all hover:scale-110 hover:bg-white/90"
+            >
+              <ArrowRightIcon className="h-5 w-5" />
+            </button>
+          </>
         ) : null}
       </div>
 
