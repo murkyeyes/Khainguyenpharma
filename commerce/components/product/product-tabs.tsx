@@ -55,13 +55,13 @@ export function ProductTabs({
               <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
             ) : (
               <div className="space-y-4">
-                <p className="text-gray-700 leading-relaxed">{description}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{description}</p>
                 
                 <div className="mt-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Thông tin sản phẩm</h3>
                   <div className="space-y-2 text-gray-700">
                     <p><strong>Thành phần:</strong> Vui lòng xem trên bao bì sản phẩm</p>
-                    <p><strong>Công dụng:</strong> {description}</p>
+                    <p className="whitespace-pre-wrap"><strong>Công dụng:</strong> {description}</p>
                     <p><strong>Hướng dẫn sử dụng:</strong> Theo chỉ định của bác sĩ hoặc dược sĩ</p>
                     <p><strong>Bảo quản:</strong> Nơi khô ráo, thoáng mát, tránh ánh sáng trực tiếp</p>
                   </div>
