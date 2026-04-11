@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 // Create new product (Admin only)
 exports.createProduct = async (req, res) => {
+  const client = await pool.connect();
   try {
     const {
       handle,
@@ -16,7 +17,7 @@ exports.createProduct = async (req, res) => {
     } = req.body;
 
     // Check if handle already exists
-    const existing = await pool.query(
+    const existing = await client.query(
       'SELECT id FROM products WHERE handle = $1',
       [handle]
     );
@@ -26,10 +27,10 @@ exports.createProduct = async (req, res) => {
     }
 
     // Start transaction
-    await pool.query('BEGIN');
+    await client.query('BEGIN');
 
     // Insert product
-    const productResult = await pool.query(
+    const productResult = await client.query(
       `INSERT INTO products (
         handle, title, description, description_html, 
         available_for_sale, price_amount, price_currency
@@ -41,7 +42,7 @@ exports.createProduct = async (req, res) => {
     const product = productResult.rows[0];
 
     // Insert product variant
-    await pool.query(
+    await client.query(
       `INSERT INTO product_variants (
         product_id, title, price_amount, price_currency, available_for_sale
       ) VALUES ($1, $2, $3, $4, $5)`,
@@ -51,28 +52,31 @@ exports.createProduct = async (req, res) => {
     // Link to collections
     if (collectionIds.length > 0) {
       for (const collectionId of collectionIds) {
-        await pool.query(
+        await client.query(
           'INSERT INTO product_collections (product_id, collection_id) VALUES ($1, $2)',
           [product.id, collectionId]
         );
       }
     }
 
-    await pool.query('COMMIT');
+    await client.query('COMMIT');
 
     res.status(201).json({
       message: 'Tạo sản phẩm thành công',
       product
     });
   } catch (error) {
-    await pool.query('ROLLBACK');
+    await client.query('ROLLBACK');
     console.error('Create product error:', error);
     res.status(500).json({ error: 'Lỗi tạo sản phẩm' });
+  } finally {
+    client.release();
   }
 };
 
 // Update product (Admin only)
 exports.updateProduct = async (req, res) => {
+  const client = await pool.connect();
   try {
     const { id } = req.params;
     const {
@@ -87,7 +91,7 @@ exports.updateProduct = async (req, res) => {
     } = req.body;
 
     // Check if product exists
-    const existing = await pool.query('SELECT id FROM products WHERE id = $1', [id]);
+    const existing = await client.query('SELECT id FROM products WHERE id = $1', [id]);
     if (existing.rows.length === 0) {
       return res.status(404).json({ error: 'Sản phẩm không tồn tại' });
     }
@@ -129,7 +133,7 @@ exports.updateProduct = async (req, res) => {
     updates.push(`updated_at = CURRENT_TIMESTAMP`);
     values.push(id);
 
-    await pool.query('BEGIN');
+    await client.query('BEGIN');
 
     // Update product
     if (updates.length > 1) { // More than just updated_at
@@ -139,16 +143,16 @@ exports.updateProduct = async (req, res) => {
         WHERE id = $${paramCount}
         RETURNING *
       `;
-      var result = await pool.query(updateQuery, values);
+      var result = await client.query(updateQuery, values);
     } else {
-      var result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+      var result = await client.query('SELECT * FROM products WHERE id = $1', [id]);
     }
 
     // Update collections if provided
     if (collectionIds !== undefined) {
-      await pool.query('DELETE FROM product_collections WHERE product_id = $1', [id]);
+      await client.query('DELETE FROM product_collections WHERE product_id = $1', [id]);
       for (const collectionId of collectionIds) {
-        await pool.query(
+        await client.query(
           'INSERT INTO product_collections (product_id, collection_id) VALUES ($1, $2)',
           [id, collectionId]
         );
@@ -157,47 +161,50 @@ exports.updateProduct = async (req, res) => {
 
     // Update variant price if price changed
     if (priceAmount !== undefined) {
-      await pool.query(
+      await client.query(
         'UPDATE product_variants SET price_amount = $1, price_currency = $2 WHERE product_id = $3',
         [priceAmount, priceCurrency || 'VND', id]
       );
     }
 
-    await pool.query('COMMIT');
+    await client.query('COMMIT');
 
     res.json({
       message: 'Cập nhật sản phẩm thành công',
       product: result.rows[0]
     });
   } catch (error) {
-    await pool.query('ROLLBACK');
+    await client.query('ROLLBACK');
     console.error('Update product error:', error);
     res.status(500).json({ error: 'Lỗi cập nhật sản phẩm' });
+  } finally {
+    client.release();
   }
 };
 
 // Delete product (Admin only)
 exports.deleteProduct = async (req, res) => {
+  const client = await pool.connect();
   try {
     const { id } = req.params;
 
     // Check if product exists
-    const existing = await pool.query('SELECT handle FROM products WHERE id = $1', [id]);
+    const existing = await client.query('SELECT handle FROM products WHERE id = $1', [id]);
     if (existing.rows.length === 0) {
       return res.status(404).json({ error: 'Sản phẩm không tồn tại' });
     }
 
     const handle = existing.rows[0].handle;
 
-    await pool.query('BEGIN');
+    await client.query('BEGIN');
 
     // Delete related records (cascade should handle this, but being explicit)
-    await pool.query('DELETE FROM product_collections WHERE product_id = $1', [id]);
-    await pool.query('DELETE FROM product_images WHERE product_id = $1', [id]);
-    await pool.query('DELETE FROM product_variants WHERE product_id = $1', [id]);
-    await pool.query('DELETE FROM products WHERE id = $1', [id]);
+    await client.query('DELETE FROM product_collections WHERE product_id = $1', [id]);
+    await client.query('DELETE FROM product_images WHERE product_id = $1', [id]);
+    await client.query('DELETE FROM product_variants WHERE product_id = $1', [id]);
+    await client.query('DELETE FROM products WHERE id = $1', [id]);
 
-    await pool.query('COMMIT');
+    await client.query('COMMIT');
 
     // Delete product images folder
     const fs = require('fs');
@@ -212,8 +219,10 @@ exports.deleteProduct = async (req, res) => {
       deletedHandle: handle
     });
   } catch (error) {
-    await pool.query('ROLLBACK');
+    await client.query('ROLLBACK');
     console.error('Delete product error:', error);
     res.status(500).json({ error: 'Lỗi xóa sản phẩm' });
+  } finally {
+    client.release();
   }
 };
