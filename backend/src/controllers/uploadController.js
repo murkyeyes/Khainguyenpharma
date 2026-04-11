@@ -92,7 +92,13 @@ exports.uploadProductImage = [
         await cloudinary.uploader.destroy(req.file.filename);
       }
       
-      res.status(500).json({ error: 'Lỗi upload ảnh' });
+      res.status(500).json({ 
+        error: 'Lỗi upload ảnh',
+        details: error.message,
+        hasCloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
+        hasApiKey: !!process.env.CLOUDINARY_API_KEY,
+        hasApiSecret: !!process.env.CLOUDINARY_API_SECRET
+      });
     }
   }
 ];
