@@ -4,12 +4,19 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 interface Product {
-  id: number;
+  id: string;
   handle: string;
   title: string;
-  price_amount: string;
-  price_currency: string;
-  available_for_sale: boolean;
+  price_amount?: string;
+  price_currency?: string;
+  available_for_sale?: boolean;
+  availableForSale?: boolean;
+  priceRange?: {
+    maxVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    }
+  };
   images: any[];
 }
 
@@ -34,7 +41,7 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleDelete = async (id: number, title: string) => {
+  const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Bạn có chắc muốn xóa sản phẩm "${title}"?`)) {
       return;
     }
