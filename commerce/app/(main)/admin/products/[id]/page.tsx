@@ -88,7 +88,7 @@ export default function EditProductPage() {
       const token = localStorage.getItem('admin_token');
 
       // 1. Update product
-      const productResponse = await fetch(`https://khainguyenpharma.onrender.com/api/admin/products/${productId}`, {
+      const productResponse = await fetch(`https://khainguyenpharma.onrender.com/api/admin/products/${product.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
