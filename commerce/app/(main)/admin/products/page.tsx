@@ -150,18 +150,18 @@ export default function AdminProductsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {parseInt(product.price_amount).toLocaleString('vi-VN')} {product.price_currency}
+                      {parseInt(product.priceRange?.maxVariantPrice?.amount || product.price_amount || '0').toLocaleString('vi-VN')} {product.priceRange?.maxVariantPrice?.currencyCode || product.price_currency || 'VND'}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        product.available_for_sale
+                        (product.availableForSale ?? product.available_for_sale)
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
                       }`}
                     >
-                      {product.available_for_sale ? 'Còn hàng' : 'Hết hàng'}
+                      {(product.availableForSale ?? product.available_for_sale) ? 'Còn hàng' : 'Hết hàng'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
