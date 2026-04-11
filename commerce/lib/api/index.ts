@@ -71,6 +71,9 @@ export async function getProducts({
   if (query) params.append('query', query);
   if (sortKey) params.append('sortKey', sortKey);
   if (reverse !== undefined) params.append('reverse', String(reverse));
+  
+  // Bypass cache
+  params.append('v', '2');
 
   const endpoint = `/api/products${params.toString() ? `?${params.toString()}` : ''}`;
   try {
