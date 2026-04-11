@@ -12,7 +12,7 @@ async function apiFetch<T>({
   endpoint,
   method = 'GET',
   body,
-  cache = 'force-cache',
+  cache = 'no-store',
   tags
 }: {
   endpoint: string;

@@ -52,7 +52,7 @@ export function ProductTabs({
         {activeTab === 'description' && (
           <div className="prose max-w-none">
             {descriptionHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
+              <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
             ) : (
               <div className="space-y-4">
                 <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{description}</p>
