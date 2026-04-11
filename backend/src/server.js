@@ -6,9 +6,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-const allowedOrigins = process.env.FRONTEND_URL 
-  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-  : ['http://localhost:3000'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://khainguyenpharma.vercel.app',
+  'https://khainguyenpharma.com',
+  ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(url => url.trim()) : [])
+];
 
 app.use(cors({
   origin: function (origin, callback) {
