@@ -23,8 +23,8 @@ export default function EditProductPage() {
     availableForSale: true,
     collectionIds: [] as number[],
   });
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>('');
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [currentImages, setCurrentImages] = useState<any[]>([]);
 
   useEffect(() => {
@@ -69,14 +69,23 @@ export default function EditProductPage() {
   };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      // Validate file size
+      for (const file of files) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`File ${file.name} vượt quá 5MB`);
+          return;
+        }
+      }
+
+      setSelectedImages(files);
+
+      // Clean up old previews
+      imagePreviews.forEach(p => URL.revokeObjectURL(p));
+      
+      const newPreviews = files.map(file => URL.createObjectURL(file));
+      setImagePreviews(newPreviews);
     }
   };
 
@@ -102,27 +111,39 @@ export default function EditProductPage() {
         throw new Error(error.error || 'Cập nhật sản phẩm thất bại');
       }
 
-      // 2. Upload new image if selected
-      if (selectedImage) {
+      // 2. Upload new images if selected
+      if (selectedImages.length > 0) {
         setUploadingImage(true);
-        const imageFormData = new FormData();
-        imageFormData.append('image', selectedImage);
-        imageFormData.append('imageType', 'main');
-        imageFormData.append('altText', formData.title);
-
-        const imageResponse = await fetch(
-          `https://khainguyenpharma.onrender.com/api/admin/products/${formData.handle}/images`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-            body: imageFormData,
+        for (let i = 0; i < selectedImages.length; i++) {
+          const file = selectedImages[i];
+          const imageFormData = new FormData();
+          imageFormData.append('image', file);
+          
+          // Determine type based on order and existing images
+          // If no existing images and this is the first image, make it 'main'
+          const existingCount = currentImages.length;
+          let imgType = 'main';
+          if (existingCount > 0 || i > 0) {
+             imgType = `detail-${Date.now()}-${i}`;
           }
-        );
+          
+          imageFormData.append('imageType', imgType);
+          imageFormData.append('altText', formData.title);
 
-        if (!imageResponse.ok) {
-          console.error('Image upload failed, but product updated');
+          const imageResponse = await fetch(
+            `https://khainguyenpharma.onrender.com/api/admin/products/${formData.handle}/images`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+              body: imageFormData,
+            }
+          );
+
+          if (!imageResponse.ok) {
+            console.error(`Image ${file.name} upload failed`);
+          }
         }
       }
 
@@ -299,21 +320,24 @@ export default function EditProductPage() {
         {/* Upload New Image */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upload hình ảnh mới
+            Upload hình ảnh mới (Có thể chọn nhiều file)
           </label>
           <div className="mt-2">
-            {imagePreview && (
-              <div className="mb-4">
-                <img src={imagePreview} alt="Preview" className="h-48 w-48 object-cover rounded-lg" />
+            {imagePreviews.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-4">
+                {imagePreviews.map((preview, idx) => (
+                   <img key={idx} src={preview} alt={`Preview ${idx}`} className="h-32 w-32 object-cover rounded-lg" />
+                ))}
               </div>
             )}
             <input
               type="file"
+              multiple
               accept="image/*"
               onChange={handleImageSelect}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
-            <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF lên đến 5MB</p>
+            <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF lên đến 5MB, có thể chọn nhiều file cùng lúc</p>
           </div>
         </div>
 
