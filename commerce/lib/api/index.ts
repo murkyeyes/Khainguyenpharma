@@ -88,7 +88,8 @@ export async function getProducts({
 export async function getProduct(handle: string): Promise<Product | undefined> {
   try {
     const data = await apiFetch<{ product: Product }>({ 
-      endpoint: `/api/products/${handle}` 
+      endpoint: `/api/products/${handle}`,
+      cache: 'no-store'
     });
     return data.product;
   } catch (error) {
