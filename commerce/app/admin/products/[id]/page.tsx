@@ -116,6 +116,8 @@ export default function EditProductPage() {
         setUploadingImage(true);
         for (let i = 0; i < selectedImages.length; i++) {
           const file = selectedImages[i];
+          if (!file) continue;
+          
           const imageFormData = new FormData();
           imageFormData.append('image', file);
           
