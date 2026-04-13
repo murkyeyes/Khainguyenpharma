@@ -10,7 +10,7 @@ export default function Search() {
   return (
     <Form
       action="/search"
-      className="relative w-full max-w-[550px] lg:w-80 xl:w-full flex items-center group"
+      className="relative w-full max-w-[550px] lg:w-80 xl:w-full flex items-center rounded-sm bg-white p-1 shadow-sm border border-gray-200 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all duration-300 dark:bg-neutral-900 dark:border-neutral-700 dark:focus-within:border-blue-500"
     >
       <input
         key={searchParams?.get("q")}
@@ -19,17 +19,14 @@ export default function Search() {
         placeholder="Tìm kiếm sản phẩm..."
         autoComplete="off"
         defaultValue={searchParams?.get("q") || ""}
-        className="w-full rounded-full border border-gray-300 bg-gray-50 px-4 py-2.5 pl-11 text-md text-black placeholder:text-gray-500 shadow-sm transition-all duration-300 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 md:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:placeholder:text-gray-400"
+        className="w-full bg-transparent px-3 py-1.5 text-md text-black placeholder:text-gray-500 focus:outline-none md:text-sm dark:text-white dark:placeholder:text-gray-400"
       />
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-blue-500">
-        <MagnifyingGlassIcon className="h-5 w-5" />
-      </div>
       <button
         type="submit"
         aria-label="Search"
-        className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-blue-600 p-2 text-white transition-all hover:bg-blue-700 hover:scale-105 active:scale-95"
+        className="flex h-8 w-14 shrink-0 items-center justify-center rounded-sm bg-blue-600 text-white transition-opacity hover:opacity-90 dark:bg-blue-600"
       >
-        <MagnifyingGlassIcon className="h-4 w-4" />
+        <MagnifyingGlassIcon className="h-5 w-5 stroke-[2]" />
       </button>
     </Form>
   );
@@ -37,14 +34,14 @@ export default function Search() {
 
 export function SearchSkeleton() {
   return (
-    <form className="relative w-full max-w-[550px] lg:w-80 xl:w-full flex items-center">
+    <form className="relative w-full max-w-[550px] lg:w-80 xl:w-full flex items-center rounded-sm bg-white p-1 shadow-sm border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
       <input
         placeholder="Tìm kiếm sản phẩm..."
         disabled
-        className="w-full animate-pulse rounded-full border border-gray-200 bg-gray-100 px-4 py-2.5 pl-11 shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
+        className="w-full bg-transparent px-3 py-1.5 text-sm text-black placeholder:text-gray-500 opacity-50 dark:text-white"
       />
-      <div className="absolute left-4 top-1/2 -translate-y-1/2">
-        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+      <div className="flex h-8 w-14 shrink-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-neutral-800 animate-pulse">
+        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 stroke-[2]" />
       </div>
     </form>
   );
