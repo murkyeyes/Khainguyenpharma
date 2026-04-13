@@ -25,11 +25,21 @@ export default function Search() {
 
   // Fetch products for client-side search
   useEffect(() => {
-    const backendUrl = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) ? process.env.NEXT_PUBLIC_API_URL : 'https://khainguyenpharma.onrender.com';
+    // Tự động nhận diện môi trường để gọi đúng API
+    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    const backendUrl = isLocal 
+      ? 'http://localhost:3001' 
+      : 'https://khainguyenpharma.onrender.com';
+      
     fetch(`${backendUrl}/api/products`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
       .then((data) => {
-        if (data.products) setAllProducts(data.products);
+        if (data && data.products) {
+          setAllProducts(data.products);
+        }
       })
       .catch((err) => console.error("Could not fetch products for autocomplete:", err));
   }, []);
