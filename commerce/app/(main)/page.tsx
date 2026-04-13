@@ -22,7 +22,7 @@ export default function HomePage() {
     <div className="w-full">
       {/* Hero Banner with Overlay */}
       <section className="relative w-screen left-1/2 right-1/2 -mx-[50vw] h-auto">
-        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] lg:aspect-[21/9]">
+        <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[21/9]">
           <Image
             src={`${backendUrl}/uploads/products/khainguyenpharma_hero_banner.png`}
             alt="Khải Nguyên Pharma Banner"
@@ -52,10 +52,10 @@ export default function HomePage() {
       </section>
 
       {/* Category Navigation */}
-      <section className="relative -mt-20 z-20">
+      <section className="relative -mt-8 md:-mt-20 z-20">
         <div className="container mx-auto px-4">
-          <div className="backdrop-blur-md bg-white/10 rounded-2xl shadow-xl border border-white/40 p-8">
-            <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
+          <div className="backdrop-blur-md bg-white/10 rounded-2xl shadow-xl border border-white/40 p-4 md:p-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-6">
               <CategoryItem 
                 href="/search/giam-dau-ha-sot" 
                 icon={<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.07 4.93a5 5 0 010 7.07l-7.07 7.07a5 5 0 11-7.07-7.07l7.07-7.07a5 5 0 017.07 0z M15.54 8.46l-7.08 7.08" /></svg>} 
