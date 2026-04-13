@@ -22,7 +22,7 @@ export default function HomePage() {
     <div className="w-full">
       {/* Hero Banner with Overlay */}
       <section className="relative w-screen left-1/2 right-1/2 -mx-[50vw] h-auto">
-        <div className="relative w-full aspect-[21/9] md:aspect-[16/6] lg:aspect-[21/7]">
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] lg:aspect-[21/9]">
           <Image
             src={`${backendUrl}/uploads/products/khainguyenpharma_hero_banner.png`}
             alt="Khải Nguyên Pharma Banner"

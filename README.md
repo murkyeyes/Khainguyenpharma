@@ -220,6 +220,19 @@ Mở browser hoặc Postman để test:
 
 ## 📝 CÁC LỆNH HỮU ÍCH
 
+### 🚀 Chạy Nhanh Toàn Hệ Thống (Quick Start)
+Nếu bạn đã setup xong toàn bộ ở bước 1 và 2, bạn không cần phải vào từng thư mục để chạy lại. Từ thư mục gốc:
+
+**Trên Windows (Command Prompt / File Explorer):**
+- Click đúp vào file `start.bat`
+
+**Trên PowerShell:**
+```powershell
+.\start.ps1
+```
+*(Lệnh này sẽ tự động chạy song song cả thư mục backend và frontend cho bạn.)*
+
+---
 ### Backend Commands
 
 ```powershell
