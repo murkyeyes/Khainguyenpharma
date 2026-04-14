@@ -30,6 +30,8 @@ async function apiFetch<T>({
         'Content-Type': 'application/json',
       },
       cache,
+      // Truyền tags để Next.js có thể revalidate cache theo tag
+      ...(tags && tags.length > 0 ? { next: { tags } } : {}),
     };
 
     if (body) {
@@ -111,8 +113,10 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 // Collection Functions
 export async function getCollections(): Promise<Collection[]> {
   try {
-    const data = await apiFetch<{ collections: Collection[] }>({ 
-      endpoint: '/api/collections' 
+    const data = await apiFetch<{ collections: Collection[] }>({
+      endpoint: '/api/collections',
+      cache: 'force-cache',
+      tags: [TAGS.collections]
     });
     return data.collections;
   } catch (error) {
@@ -250,8 +254,10 @@ export async function getPages(): Promise<Page[]> {
 // Menu Functions
 export async function getMenu(handle: string): Promise<Menu[]> {
   try {
-    const data = await apiFetch<{ menu: Menu[] }>({ 
-      endpoint: `/api/menu/${handle}` 
+    const data = await apiFetch<{ menu: Menu[] }>({
+      endpoint: `/api/menu/${handle}`,
+      cache: 'force-cache',
+      tags: [TAGS.menu]
     });
     return data.menu || [];
   } catch (error) {
