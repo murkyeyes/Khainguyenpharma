@@ -33,11 +33,10 @@ export default function UserMenu() {
     window.location.href = '/';
   };
 
-  // Tránh hydration mismatch trên server
   if (!mounted) {
     return (
-      <div className="text-blue-600 font-medium text-sm hidden lg:block opacity-0">
-        Đăng nhập
+      <div className="hidden lg:flex items-center gap-3">
+        <div className="text-gray-300 font-medium text-sm transition-colors">Đang tải...</div>
       </div>
     );
   }
@@ -58,7 +57,7 @@ export default function UserMenu() {
             </Link>
           ) : (
             <Link 
-              href="/auth/login" // Tạm thời link đến trang chính hoặc hồ sơ tùy cấu trúc 
+              href="/auth/login"
               className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
             >
               📦 Đơn hàng của tôi

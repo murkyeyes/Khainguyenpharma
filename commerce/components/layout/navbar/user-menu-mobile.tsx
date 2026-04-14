@@ -33,7 +33,13 @@ export default function UserMenuMobile({ closeMenu }: { closeMenu: () => void })
     window.location.href = '/';
   };
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <div className="mt-6 border-t border-gray-200 pt-6">
+        <div className="text-gray-400">Đang tải...</div>
+      </div>
+    );
+  }
 
   if (userName) {
     return (
