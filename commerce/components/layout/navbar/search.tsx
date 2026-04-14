@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Form from "next/form";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export default function Search() {
