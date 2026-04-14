@@ -99,7 +99,7 @@ export default function AdminLoginPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                placeholder="admin@khainguyen.com"
+                placeholder="mail đăng nhập"
               />
             </div>
 
@@ -145,7 +145,7 @@ export default function AdminLoginPage() {
             {/* Info */}
             <div className="text-center">
               <p className="text-xs text-gray-500">
-                Mặc định: admin@khainguyen.com / Admin@123
+                
               </p>
             </div>
           </form>
