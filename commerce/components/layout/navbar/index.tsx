@@ -6,9 +6,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search, { SearchSkeleton } from "./search";
-import dynamic from "next/dynamic";
-
-const UserMenu = dynamic(() => import("./user-menu"), { ssr: false });
+import UserMenu from "./user-menu";
 
 const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
 const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";

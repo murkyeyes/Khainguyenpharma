@@ -8,9 +8,7 @@ import { Fragment, Suspense, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Menu } from "lib/shopify/types";
 import Search, { SearchSkeleton } from "./search";
-import dynamic from "next/dynamic";
-
-const UserMenuMobile = dynamic(() => import("./user-menu-mobile"), { ssr: false });
+import UserMenuMobile from "./user-menu-mobile";
 
 export default function MobileMenu({ menu }: { menu: Menu[] }) {
   const pathname = usePathname();
