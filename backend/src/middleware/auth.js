@@ -51,12 +51,11 @@ exports.requireAdmin = (req, res, next) => {
   next();
 };
 
-// Middleware to check if user is admin or owner of resource
-exports.requireAdminOrOwner = (resourceUserId) => {
-  return (req, res, next) => {
-    if (req.user.role === 'admin' || req.user.userId === resourceUserId) {
-      return next();
-    }
-    res.status(403).json({ error: 'Không có quyền truy cập' });
-  };
+// Middleware chỉ cho phép customer (không phải admin)
+exports.requireUser = (req, res, next) => {
+  const role = req.user.role;
+  if (role !== 'customer' && role !== 'user') {
+    return res.status(403).json({ error: 'Chỉ dành cho khách hàng' });
+  }
+  next();
 };

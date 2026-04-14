@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://khainguyenpharma.onrender.com';
 
 export default function AdminLayout({
   children,
@@ -14,45 +16,65 @@ export default function AdminLayout({
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [pendingOrders, setPendingOrders] = useState(0);
+  const [newOrderToast, setNewOrderToast] = useState(false);
+  const [lastChecked, setLastChecked] = useState(new Date().toISOString());
 
   useEffect(() => {
     setMounted(true);
-
-    // Check if user is logged in
     const token = localStorage.getItem('admin_token');
-    const userData = localStorage.getItem('admin_user');
+    // Hỗ trợ cả 2 key: user_info (mới) và admin_user (cũ)
+    const userData = localStorage.getItem('user_info') || localStorage.getItem('admin_user');
 
     if (!token || !userData) {
-      if (pathname !== '/admin/login') {
-        router.push('/admin/login');
-      }
+      if (pathname !== '/admin/login') router.push('/admin/login');
       setLoading(false);
       return;
     }
-
     try {
       const parsedUser = JSON.parse(userData);
       if (parsedUser.role !== 'admin') {
-        if (pathname !== '/admin/login') {
-          router.push('/admin/login');
-        }
+        if (pathname !== '/admin/login') router.push('/admin/login');
         setLoading(false);
         return;
       }
       setUser(parsedUser);
-    } catch (error) {
-      if (pathname !== '/admin/login') {
-        router.push('/admin/login');
-      }
+    } catch {
+      if (pathname !== '/admin/login') router.push('/admin/login');
     } finally {
       setLoading(false);
     }
   }, [router, pathname]);
 
+  // Polling đơn hàng mới mỗi 30 giây
+  const pollOrders = useCallback(async () => {
+    const token = localStorage.getItem('admin_token');
+    if (!token) return;
+    try {
+      const res = await fetch(
+        `${API_URL}/api/admin/orders/stats?since=${lastChecked}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setPendingOrders(data.pendingCount || 0);
+        if (data.newOrdersSince > 0) setNewOrderToast(true);
+        setLastChecked(data.checkedAt);
+      }
+    } catch { /* ignore */ }
+  }, [lastChecked]);
+
+  useEffect(() => {
+    const interval = setInterval(pollOrders, 30000);
+    return () => clearInterval(interval);
+  }, [pollOrders]);
+
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_user');
-    router.push('/admin/login');
+    localStorage.removeItem('user_info');
+    localStorage.removeItem('user_role');
+    router.push('/auth/login');
   };
 
   // Prevent hydration mismatch
@@ -81,6 +103,7 @@ export default function AdminLayout({
     { name: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
     { name: 'Sản phẩm', href: '/admin/products', icon: '📦' },
     { name: 'Collections', href: '/admin/collections', icon: '📁' },
+    { name: 'Đơn hàng', href: '/admin/orders', icon: '🛒', badge: pendingOrders },
     { name: 'Trang', href: '/admin/pages', icon: '📄' },
   ];
 
@@ -110,7 +133,7 @@ export default function AdminLayout({
 
         {/* Navigation */}
         <nav className="flex-1 px-2 py-4 space-y-1">
-          {navigation.map((item) => {
+          {navigation.map((item: any) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
               <Link
@@ -123,6 +146,11 @@ export default function AdminLayout({
               >
                 <span className="mr-3 text-xl">{item.icon}</span>
                 {item.name}
+                {item.badge > 0 && (
+                  <span className="ml-auto bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -164,6 +192,13 @@ export default function AdminLayout({
         </div>
 
         {/* Page Content */}
+        {newOrderToast && (
+          <div className="fixed top-4 right-4 z-50 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-bounce">
+            <span className="text-lg">🔔</span>
+            <span className="font-semibold">Có đơn hàng mới!</span>
+            <button onClick={() => setNewOrderToast(false)} className="ml-2 text-green-200 hover:text-white">✕</button>
+          </div>
+        )}
         <main className="p-8">{children}</main>
       </div>
     </div>
