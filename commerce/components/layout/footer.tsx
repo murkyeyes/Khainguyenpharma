@@ -9,12 +9,18 @@ const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
 const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
 const COMPANY_NAME = process.env?.COMPANY_NAME || 'Khải Nguyên Pharma';
 
+const skeleton = "w-full h-6 animate-pulse rounded-sm bg-neutral-200";
+
+// Tách riêng phần fetch menu vào component async riêng
+// để Next.js có thể Suspense-stream mà không block static render
+async function FooterMenuAsync() {
+  const menu = await getMenu("next-js-frontend-footer-menu");
+  return <FooterMenu menu={menu} />;
+}
+
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
   const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : "");
-  const skeleton =
-    "w-full h-6 animate-pulse rounded-sm bg-neutral-200";
-  const menu = await getMenu("next-js-frontend-footer-menu");
   const copyrightName = COMPANY_NAME || SITE_NAME || "";
 
   return (
@@ -25,8 +31,8 @@ export default async function Footer() {
             className="flex items-center hover:opacity-80 transition-opacity"
             href="/"
           >
-            <Image 
-              src={`${backendUrl}/uploads/products/logo.png`} 
+            <Image
+              src={`${backendUrl}/uploads/products/logo.png`}
               alt={SITE_NAME || "Khải Nguyên Pharma"}
               width={180}
               height={60}
@@ -46,7 +52,7 @@ export default async function Footer() {
             </div>
           }
         >
-          <FooterMenu menu={menu} />
+          <FooterMenuAsync />
         </Suspense>
       </div>
       <div className="border-t border-neutral-200 py-6 text-sm">
