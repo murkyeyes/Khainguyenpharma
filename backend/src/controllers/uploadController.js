@@ -75,6 +75,14 @@ exports.uploadProductImage = [
         );
       }
 
+      // Nếu upload ảnh 'main', cập nhật luôn featured_image_url trên bảng products
+      if (imageType === 'main') {
+        await pool.query(
+          'UPDATE products SET featured_image_url = $1, featured_image_alt = $2 WHERE id = $3',
+          [imageUrl, altText || handle, productId]
+        );
+      }
+
       res.json({
         message: 'Upload ảnh thành công',
         image: {

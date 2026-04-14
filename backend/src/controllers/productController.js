@@ -54,35 +54,39 @@ exports.getAllProducts = async (req, res) => {
 
     const result = await pool.query(sqlQuery, params);
     
-    const products = result.rows.map(row => ({
-      id: row.id,
-      handle: row.handle,
-      title: row.title,
-      description: row.description,
-      availableForSale: row.available_for_sale,
-      priceRange: {
-        maxVariantPrice: {
-          amount: row.price_amount.toString(),
-          currencyCode: row.price_currency
+    const products = result.rows.map(row => {
+      const images = row.images || [];
+      // Dùng featured_image_url nếu có, không thì lấy ảnh đầu tiên từ product_images
+      const firstImage = images[0] || null;
+      return {
+        id: row.id,
+        handle: row.handle,
+        title: row.title,
+        description: row.description,
+        availableForSale: row.available_for_sale,
+        priceRange: {
+          maxVariantPrice: {
+            amount: row.price_amount.toString(),
+            currencyCode: row.price_currency
+          },
+          minVariantPrice: {
+            amount: row.price_amount.toString(),
+            currencyCode: row.price_currency
+          }
         },
-        minVariantPrice: {
-          amount: row.price_amount.toString(),
-          currencyCode: row.price_currency
+        featuredImage: row.featured_image_url
+          ? { url: row.featured_image_url, altText: row.featured_image_alt, width: 800, height: 800 }
+          : firstImage
+            ? { url: firstImage.url, altText: firstImage.altText || row.title, width: 800, height: 800 }
+            : null,
+        images,
+        variants: row.variants || [],
+        seo: {
+          title: row.seo_title || row.title,
+          description: row.seo_description || row.description
         }
-      },
-      featuredImage: {
-        url: row.featured_image_url,
-        altText: row.featured_image_alt,
-        width: 800,
-        height: 800
-      },
-      images: row.images || [],
-      variants: row.variants || [],
-      seo: {
-        title: row.seo_title || row.title,
-        description: row.seo_description || row.description
-      }
-    }));
+      };
+    });
 
     res.json({ products });
   } catch (error) {
@@ -134,12 +138,14 @@ exports.getProductByHandle = async (req, res) => {
     }
 
     const row = result.rows[0];
+    const images = row.images || [];
+    const firstImage = images[0] || null;
     const product = {
       id: row.id,
       handle: row.handle,
       title: row.title,
       description: row.description,
-      descriptionHtml: `<p>${row.description}</p>`,
+      descriptionHtml: row.description_html || `<p>${row.description || ''}</p>`,
       availableForSale: row.available_for_sale,
       priceRange: {
         maxVariantPrice: {
@@ -151,13 +157,12 @@ exports.getProductByHandle = async (req, res) => {
           currencyCode: row.price_currency
         }
       },
-      featuredImage: {
-        url: row.featured_image_url,
-        altText: row.featured_image_alt,
-        width: 800,
-        height: 800
-      },
-      images: row.images || [],
+      featuredImage: row.featured_image_url
+        ? { url: row.featured_image_url, altText: row.featured_image_alt, width: 800, height: 800 }
+        : firstImage
+          ? { url: firstImage.url, altText: firstImage.altText || row.title, width: 800, height: 800 }
+          : null,
+      images,
       variants: row.variants || [],
       seo: {
         title: row.seo_title || row.title,
