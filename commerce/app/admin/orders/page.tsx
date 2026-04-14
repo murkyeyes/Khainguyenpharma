@@ -124,7 +124,7 @@ export default function AdminOrdersPage() {
         {[['', 'Tất cả'], ...Object.entries(STATUS_LABELS)].map(([val, label]) => (
           <button
             key={val}
-            onClick={() => setFilterStatus(val)}
+            onClick={() => setFilterStatus(val as string)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition border ${
               filterStatus === val
                 ? 'bg-blue-600 text-white border-blue-600'
