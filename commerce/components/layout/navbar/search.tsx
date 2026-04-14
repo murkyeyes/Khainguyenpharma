@@ -143,15 +143,17 @@ export default function Search() {
 
 export function SearchSkeleton() {
   return (
-    <form className="relative w-full max-w-[550px] lg:w-80 xl:w-full flex items-center rounded-sm bg-white p-1 shadow-sm border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
-      <input
-        placeholder="Tìm kiếm sản phẩm..."
-        disabled
-        className="w-full bg-transparent px-3 py-1.5 text-sm text-black placeholder:text-gray-500 opacity-50 dark:text-white"
-      />
-      <div className="flex h-8 w-14 shrink-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-neutral-800 animate-pulse">
-        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 stroke-[2]" />
-      </div>
-    </form>
+    <div className="relative w-full max-w-[550px] lg:w-80 xl:w-full flex flex-col">
+      <form className="relative w-full flex items-center rounded-sm bg-white p-1 shadow-sm border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <input
+          placeholder="Tìm kiếm sản phẩm..."
+          disabled
+          className="w-full bg-transparent px-3 py-1.5 text-md md:text-sm text-black placeholder:text-gray-500 opacity-50 dark:text-white"
+        />
+        <div className="flex h-8 w-14 shrink-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-neutral-800 animate-pulse">
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 stroke-[2]" />
+        </div>
+      </form>
+    </div>
   );
 }
