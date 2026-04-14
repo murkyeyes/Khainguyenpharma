@@ -16,7 +16,7 @@ export default function NewProductPage() {
     priceAmount: '',
     priceCurrency: 'VND',
     availableForSale: true,
-    collectionIds: [] as string[],
+    collectionIds: [] as string[], // dùng UUID (collection.id) thay vì handle
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -106,12 +106,12 @@ export default function NewProductPage() {
     }
   };
 
-  const handleCollectionToggle = (collectionHandle: string) => {
+  const handleCollectionToggle = (collectionId: string) => {
     setFormData((prev) => ({
       ...prev,
-      collectionIds: prev.collectionIds.includes(collectionHandle)
-        ? prev.collectionIds.filter((handle) => handle !== collectionHandle)
-        : [...prev.collectionIds, collectionHandle],
+      collectionIds: prev.collectionIds.includes(collectionId)
+        ? prev.collectionIds.filter((id) => id !== collectionId)
+        : [...prev.collectionIds, collectionId],
     }));
   };
 
@@ -236,15 +236,15 @@ export default function NewProductPage() {
           </label>
           <div className="space-y-2">
             {collections.map((collection) => (
-              <div key={collection.handle} className="flex items-center">
+              <div key={collection.id} className="flex items-center">
                 <input
                   type="checkbox"
-                  id={`collection-${collection.handle}`}
-                  checked={formData.collectionIds.includes(collection.handle)}
-                  onChange={() => handleCollectionToggle(collection.handle)}
+                  id={`collection-${collection.id}`}
+                  checked={formData.collectionIds.includes(collection.id)}
+                  onChange={() => handleCollectionToggle(collection.id)}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor={`collection-${collection.handle}`} className="ml-2 block text-sm text-gray-900">
+                <label htmlFor={`collection-${collection.id}`} className="ml-2 block text-sm text-gray-900">
                   {collection.title}
                 </label>
               </div>

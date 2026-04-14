@@ -21,7 +21,7 @@ export default function EditProductPage() {
     priceAmount: '',
     priceCurrency: 'VND',
     availableForSale: true,
-    collectionIds: [] as number[],
+    collectionIds: [] as string[],
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
