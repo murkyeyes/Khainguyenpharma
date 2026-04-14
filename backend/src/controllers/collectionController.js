@@ -9,6 +9,7 @@ exports.getAllCollections = async (req, res) => {
     `);
 
     const collections = result.rows.map(row => ({
+      id: row.id,         // ← thêm id để admin form dùng UUID
       handle: row.handle,
       title: row.title,
       description: row.description,
