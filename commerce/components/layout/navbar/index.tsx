@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search, { SearchSkeleton } from "./search";
+import UserMenu from "./user-menu";
 
 const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
 const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
@@ -65,12 +66,7 @@ export async function Navbar() {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
-              <Link
-                href="/admin/login"
-                className="text-blue-600 hover:text-blue-800 font-medium text-sm hidden lg:block"
-              >
-                Login/Register
-              </Link>
+              <UserMenu />
               <Link
                 href="/contact"
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded text-sm hidden lg:block transition-colors"

@@ -8,6 +8,7 @@ import { Fragment, Suspense, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Menu } from "lib/shopify/types";
 import Search, { SearchSkeleton } from "./search";
+import UserMenuMobile from "./user-menu-mobile";
 
 export default function MobileMenu({ menu }: { menu: Menu[] }) {
   const pathname = usePathname();
@@ -94,6 +95,7 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
                     ))}
                   </ul>
                 ) : null}
+                <UserMenuMobile closeMenu={closeMobileMenu} />
               </div>
             </Dialog.Panel>
           </Transition.Child>
