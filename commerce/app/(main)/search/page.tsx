@@ -4,6 +4,9 @@ import { defaultSort, sorting } from "lib/constants";
 import { getProducts, getCollections } from "lib/api";
 import { SearchFilters } from "./components/search-filters";
 
+// Bắt buộc render động vì trang dùng no-store fetch (searchParams thay đổi theo request)
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Tất Cả Sản Phẩm - Khải Nguyên Pharma",
   description: "Tìm kiếm và mua sắm các sản phẩm dược phẩm chất lượng cao.",
