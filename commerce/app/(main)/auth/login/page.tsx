@@ -128,7 +128,7 @@ function LoginForm() {
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <span className="text-lg">🛍️</span>
+              <span className="text-lg"></span>
               Khách hàng
             </button>
             <button
@@ -142,7 +142,7 @@ function LoginForm() {
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <span className="text-lg">🔐</span>
+              <span className="text-lg"></span>
               Quản trị viên
             </button>
           </div>
@@ -159,12 +159,12 @@ function LoginForm() {
             >
               {role === "customer" ? (
                 <>
-                  <span>👤</span>
+                  <span></span>
                   <span>Đăng nhập để mua hàng và theo dõi đơn hàng</span>
                 </>
               ) : (
                 <>
-                  <span>⚠️</span>
+                  <span></span>
                   <span>Chỉ dành cho quản trị viên hệ thống</span>
                 </>
               )}
@@ -203,14 +203,14 @@ function LoginForm() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? "🙈" : "👁️"}
+                    {showPassword ? "" : ""}
                   </button>
                 </div>
               </div>
 
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm flex items-center gap-2">
-                  <span>❌</span> {error}
+                  <span></span> {error}
                 </div>
               )}
 
@@ -284,7 +284,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center">
-          Đang tải...
+          
         </div>
       }
     >
