@@ -56,7 +56,7 @@ export default function EditProductPage() {
         priceAmount: data.product.priceRange.maxVariantPrice.amount,
         priceCurrency: data.product.priceRange.maxVariantPrice.currencyCode,
         availableForSale: data.product.availableForSale,
-        collectionIds: data.product.collections?.map((c: any) => c.id) || [],
+        collectionIds: data.product.collections?.map((c: any) => c.handle) || [],
       });
       setCurrentImages(data.product.images || []);
     } catch (error) {
@@ -164,12 +164,12 @@ export default function EditProductPage() {
     }
   };
 
-  const handleCollectionToggle = (collectionId: string) => {
+  const handleCollectionToggle = (collectionHandle: string) => {
     setFormData((prev) => ({
       ...prev,
-      collectionIds: prev.collectionIds.includes(collectionId)
-        ? prev.collectionIds.filter((id) => id !== collectionId)
-        : [...prev.collectionIds, collectionId],
+      collectionIds: prev.collectionIds.includes(collectionHandle)
+        ? prev.collectionIds.filter((h) => h !== collectionHandle)
+        : [...prev.collectionIds, collectionHandle],
     }));
   };
 
@@ -294,15 +294,15 @@ export default function EditProductPage() {
           </label>
           <div className="space-y-2">
             {collections.map((collection) => (
-              <div key={collection.id} className="flex items-center">
+              <div key={collection.handle} className="flex items-center">
                 <input
                   type="checkbox"
-                  id={`collection-${collection.id}`}
-                  checked={formData.collectionIds.includes(collection.id)}
-                  onChange={() => handleCollectionToggle(collection.id)}
+                  id={`collection-${collection.handle}`}
+                  checked={formData.collectionIds.includes(collection.handle)}
+                  onChange={() => handleCollectionToggle(collection.handle)}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor={`collection-${collection.id}`} className="ml-2 block text-sm text-gray-900">
+                <label htmlFor={`collection-${collection.handle}`} className="ml-2 block text-sm text-gray-900">
                   {collection.title}
                 </label>
               </div>

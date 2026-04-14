@@ -10,7 +10,7 @@ const createProductSchema = z.object({
     // We coerce priceAmount because it might come as a string from FormData or JSON
     priceAmount: z.coerce.number().positive('Giá phải lớn hơn 0'),
     priceCurrency: z.string().optional(),
-    collectionIds: z.array(z.string().uuid()).optional(), // Assuming IDs are UUIDs, adjust if not
+    collectionIds: z.array(z.string().min(1)).optional(), // chấp nhận UUID hoặc handle
   }),
 });
 

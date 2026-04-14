@@ -1,6 +1,16 @@
 const pool = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 
+// Helper: nhận UUID hoặc handle, luôn trả về UUID
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+async function resolveCollectionId(client, idOrHandle) {
+  if (UUID_REGEX.test(idOrHandle)) return idOrHandle; // đã là UUID
+  // lookup theo handle
+  const r = await client.query('SELECT id FROM collections WHERE handle = $1', [idOrHandle]);
+  if (r.rows.length === 0) return null;
+  return r.rows[0].id;
+}
+
 // Create new product (Admin only)
 exports.createProduct = async (req, res) => {
   const client = await pool.connect();
@@ -51,10 +61,12 @@ exports.createProduct = async (req, res) => {
 
     // Link to collections
     if (collectionIds.length > 0) {
-      for (const collectionId of collectionIds) {
+      for (const idOrHandle of collectionIds) {
+        const collectionUUID = await resolveCollectionId(client, idOrHandle);
+        if (!collectionUUID) continue; // bỏ qua nếu không tìm thấy
         await client.query(
           'INSERT INTO product_collections (product_id, collection_id) VALUES ($1, $2)',
-          [product.id, collectionId]
+          [product.id, collectionUUID]
         );
       }
     }
@@ -151,10 +163,12 @@ exports.updateProduct = async (req, res) => {
     // Update collections if provided
     if (collectionIds !== undefined) {
       await client.query('DELETE FROM product_collections WHERE product_id = $1', [id]);
-      for (const collectionId of collectionIds) {
+      for (const idOrHandle of collectionIds) {
+        const collectionUUID = await resolveCollectionId(client, idOrHandle);
+        if (!collectionUUID) continue;
         await client.query(
           'INSERT INTO product_collections (product_id, collection_id) VALUES ($1, $2)',
-          [id, collectionId]
+          [id, collectionUUID]
         );
       }
     }
