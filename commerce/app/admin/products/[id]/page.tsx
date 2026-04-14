@@ -164,7 +164,7 @@ export default function EditProductPage() {
     }
   };
 
-  const handleCollectionToggle = (collectionId: number) => {
+  const handleCollectionToggle = (collectionId: string) => {
     setFormData((prev) => ({
       ...prev,
       collectionIds: prev.collectionIds.includes(collectionId)
