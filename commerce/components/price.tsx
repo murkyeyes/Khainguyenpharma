@@ -12,11 +12,13 @@ const Price = ({
   currencyCodeClassName?: string;
 } & React.ComponentProps<"p">) => (
   <p suppressHydrationWarning={true} className={className}>
-    {`${new Intl.NumberFormat(undefined, {
+    <span suppressHydrationWarning className={className}>
+    {`${new Intl.NumberFormat('vi-VN', {
       style: "currency",
       currency: currencyCode,
       currencyDisplay: "narrowSymbol",
     }).format(parseFloat(amount))}`}
+    </span>
     <span
       className={clsx("ml-1 inline", currencyCodeClassName)}
     >{`${currencyCode}`}</span>
