@@ -22,15 +22,48 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Nếu đã đăng nhập, redirect
+  // Kiểm tra token nếu đã lưu
   useEffect(() => {
-    const token =
-      localStorage.getItem("user_token") || localStorage.getItem("admin_token");
-    const userRole = localStorage.getItem("user_role");
-    if (token) {
-      if (userRole === "admin") router.replace("/admin/dashboard");
-      else router.replace(redirect);
-    }
+    const checkAuth = async () => {
+      const token =
+        localStorage.getItem("user_token") || localStorage.getItem("admin_token");
+      const userRole = localStorage.getItem("user_role");
+      const userInfo = localStorage.getItem("user_info");
+
+      if (token && userInfo) {
+        try {
+          const res = await fetch(`${API_URL}/api/auth/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (res.ok) {
+            // Token còn hạn -> Redirect
+            if (userRole === "admin") router.replace("/admin/dashboard");
+            else router.replace(redirect);
+          } else {
+            // Token hết hạn hoặc không hợp lệ -> Xóa bỏ để user đăng nhập lại
+            localStorage.removeItem("user_token");
+            localStorage.removeItem("admin_token");
+            localStorage.removeItem("user_role");
+            localStorage.removeItem("user_info");
+          }
+        } catch (e) {
+          // Lỗi mạng hoặc server sập -> Tạm để form hiển thị
+        }
+      } else {
+        // Dọn dẹp rác nếu token hoặc user_info bị thiếu
+        if (token || userInfo || userRole) {
+          localStorage.removeItem("user_token");
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("user_role");
+          localStorage.removeItem("user_info");
+        }
+      }
+    };
+
+    checkAuth();
   }, [router, redirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,10 +103,10 @@ function LoginForm() {
 
       if (userRole === "admin") {
         localStorage.setItem("admin_token", data.token);
-        router.replace("/admin/dashboard");
+        window.location.href = "/admin/dashboard";
       } else {
         localStorage.setItem("user_token", data.token);
-        router.replace(redirect !== "/" ? redirect : "/");
+        window.location.href = redirect !== "/" ? redirect : "/";
       }
     } catch {
       setError("Lỗi kết nối. Vui lòng thử lại.");
@@ -280,12 +313,24 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-blue-50">
+        <div className="animate-pulse bg-white/80 rounded-2xl w-full max-w-md h-[500px]"></div>
+      </div>
+    );
+  }
+
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          
-        </div>
+        <div className="min-h-screen flex items-center justify-center"></div>
       }
     >
       <LoginForm />
