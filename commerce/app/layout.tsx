@@ -27,8 +27,8 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="vi" className={GeistSans.variable}>
-      <body className="bg-gradient-to-b from-blue-100 to-blue-50 text-gray-900">
+    <html lang="vi" className={GeistSans.variable} suppressHydrationWarning>
+      <body className="bg-gradient-to-b from-blue-100 to-blue-50 text-gray-900" suppressHydrationWarning>
         {children}
       </body>
     </html>
