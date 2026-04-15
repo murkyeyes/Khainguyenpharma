@@ -14,8 +14,16 @@ export default function UserMenuMobile({ closeMenu }: { closeMenu: () => void })
       const userInfoStr = localStorage.getItem("user_info");
       const role = localStorage.getItem("user_role");
       if (userInfoStr) {
-        const userInfo = JSON.parse(userInfoStr);
-        setUserName(userInfo.name || userInfo.email?.split("@")[0] || "Account");
+        try {
+          const userInfo = JSON.parse(userInfoStr);
+          setUserName(userInfo.name || userInfo.email?.split("@")[0] || "Account");
+        } catch(e) {
+          console.error("Corrupted user_info, clearing storage");
+          localStorage.removeItem("user_token");
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("user_info");
+          localStorage.removeItem("user_role");
+        }
       }
       if (role) {
         setUserRole(role);

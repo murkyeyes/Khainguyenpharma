@@ -31,6 +31,16 @@ function LoginForm() {
       const userInfo = localStorage.getItem("user_info");
 
       if (token && userInfo) {
+        // Kiểm tra xem userInfo có bị lỗi format (Object, [object Object] thay vì string JSON không)
+        try {
+          JSON.parse(userInfo);
+        } catch (e) {
+          localStorage.removeItem("user_token");
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("user_role");
+          localStorage.removeItem("user_info");
+          return; // Hủy checkAuth luôn để ở lại trang đăng nhập
+        }
         try {
           const res = await fetch(`${API_URL}/api/auth/me`, {
             headers: {
