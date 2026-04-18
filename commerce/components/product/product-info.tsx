@@ -4,8 +4,18 @@ import { Product } from 'lib/shopify/types';
 import { useState } from 'react';
 import { AddToCart } from './add-to-cart';
 
+import { useCart } from 'components/cart/cart-context';
+import { addItem } from 'components/cart/actions';
+import { useActionState, startTransition } from 'react';
+import { useRouter } from 'next/navigation';
+
 export function ProductInfo({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
+  const { addCartItem } = useCart();
+  const [message, formAction] = useActionState(addItem, null);
+
+  const defaultVariant = product.variants?.[0];
 
   const formatPrice = (amount: string) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -16,6 +26,23 @@ export function ProductInfo({ product }: { product: Product }) {
 
   const handleQuantityChange = (delta: number) => {
     setQuantity(Math.max(1, quantity + delta));
+  };
+
+  const handleAddToCart = () => {
+    if (!defaultVariant) return;
+    addCartItem(defaultVariant, product);
+    startTransition(() => {
+      formAction({ selectedVariantId: defaultVariant.id, quantity });
+    });
+  };
+
+  const handleBuyNow = () => {
+    if (!defaultVariant) return;
+    addCartItem(defaultVariant, product);
+    startTransition(() => {
+      formAction({ selectedVariantId: defaultVariant.id, quantity });
+      router.push('/checkout');
+    });
   };
 
   return (
@@ -46,13 +73,13 @@ export function ProductInfo({ product }: { product: Product }) {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <button className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded transition-colors duration-300 flex items-center justify-center gap-2">
+        <button onClick={handleAddToCart} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded transition-colors duration-300 flex items-center justify-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           <span>THÊM VÀO GIỎ</span>
         </button>
-        <button className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors duration-300 flex items-center justify-center gap-2">
+        <button onClick={handleBuyNow} className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors duration-300 flex items-center justify-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>

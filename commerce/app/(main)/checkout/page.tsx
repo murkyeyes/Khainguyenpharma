@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getCartAction } from 'components/cart/actions';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://khainguyenpharma.onrender.com';
 
@@ -30,23 +31,18 @@ export default function CheckoutPage() {
       router.replace('/auth/login?redirect=/checkout');
       return;
     }
-    fetchCart(token);
+    fetchCart();
     // Pre-fill từ user info
     const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
     if (userInfo.address) setForm(f => ({ ...f, shippingAddress: userInfo.address }));
     if (userInfo.phone) setForm(f => ({ ...f, phone: userInfo.phone }));
   }, [router]);
 
-  const fetchCart = async (token: string) => {
+  const fetchCart = async () => {
     try {
-      // Lấy cart của user qua user_id trong token
-      // Frontend cần biết cartId — tạo/lấy cart của user
-      const res = await fetch(`${API_URL}/api/cart/my`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setCart(data.cart);
+      const data = await getCartAction();
+      if (data) {
+        setCart(data);
       }
     } catch {
       setError('Không thể tải giỏ hàng');
@@ -73,7 +69,7 @@ export default function CheckoutPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, cartId: cart?.id }),
       });
 
       const data = await res.json();

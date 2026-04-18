@@ -64,7 +64,7 @@ export default function UserMenuMobile({ closeMenu }: { closeMenu: () => void })
             </li>
           ) : (
             <li className="py-2 text-lg text-black transition-colors hover:text-blue-600">
-              <Link href="/auth/login" onClick={closeMenu}>
+              <Link href="/orders" onClick={closeMenu}>
                 $ My Orders
               </Link>
             </li>

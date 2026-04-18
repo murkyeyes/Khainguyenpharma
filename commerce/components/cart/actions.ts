@@ -14,8 +14,11 @@ import { redirect } from "next/navigation";
 
 export async function addItem(
   prevState: any,
-  selectedVariantId: string | undefined
+  payload: string | { selectedVariantId: string | undefined; quantity: number }
 ) {
+  const selectedVariantId = typeof payload === "string" ? payload : payload?.selectedVariantId;
+  const quantity = typeof payload === "string" ? 1 : payload?.quantity || 1;
+
   if (!selectedVariantId) {
     return "Error adding item to cart";
   }
@@ -34,7 +37,7 @@ export async function addItem(
       (await cookies()).set("cartId", cartId);
     }
 
-    await addToCart(cartId, [{ merchandiseId: selectedVariantId, quantity: 1 }]);
+    await addToCart(cartId, [{ merchandiseId: selectedVariantId, quantity }]);
     revalidateTag(TAGS.cart);
   } catch (e) {
     return "Error adding item to cart";
@@ -137,4 +140,11 @@ export async function redirectToCheckout() {
 export async function createCartAndSetCookie() {
   let cart = await createCart();
   (await cookies()).set("cartId", cart.id!);
+}
+
+export async function getCartAction() {
+  const cartId = (await cookies()).get("cartId")?.value;
+  if (!cartId) return null;
+  const cart = await getCart(cartId);
+  return cart;
 }

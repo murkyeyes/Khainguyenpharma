@@ -5,23 +5,15 @@ exports.createOrder = async (req, res) => {
   const client = await pool.connect();
   try {
     const userId = req.user.userId;
-    const { shippingAddress, phone, note } = req.body;
+    const { shippingAddress, phone, note, cartId } = req.body;
 
     if (!shippingAddress || !phone) {
       return res.status(400).json({ error: 'Vui lòng nhập địa chỉ và số điện thoại' });
     }
 
-    // Lấy cart của user
-    const cartResult = await client.query(
-      'SELECT id FROM carts WHERE user_id = $1',
-      [userId]
-    );
-
-    if (cartResult.rows.length === 0) {
-      return res.status(400).json({ error: 'Giỏ hàng trống' });
+    if (!cartId) {
+      return res.status(400).json({ error: 'Không tìm thấy thông tin giỏ hàng' });
     }
-
-    const cartId = cartResult.rows[0].id;
 
     // Lấy cart items kèm thông tin sản phẩm
     const itemsResult = await client.query(`
