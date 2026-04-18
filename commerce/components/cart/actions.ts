@@ -14,7 +14,7 @@ import { redirect } from "next/navigation";
 
 export async function addItem(
   prevState: any,
-  payload: string | { selectedVariantId: string | undefined; quantity: number }
+  payload: string | { selectedVariantId: string | undefined; quantity: number } | undefined
 ) {
   const selectedVariantId = typeof payload === "string" ? payload : payload?.selectedVariantId;
   const quantity = typeof payload === "string" ? 1 : payload?.quantity || 1;
