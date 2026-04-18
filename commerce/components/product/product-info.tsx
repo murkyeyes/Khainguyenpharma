@@ -30,7 +30,7 @@ export function ProductInfo({ product }: { product: Product }) {
 
   const handleAddToCart = () => {
     if (!defaultVariant) return;
-    addCartItem(defaultVariant, product);
+    addCartItem(defaultVariant, product, quantity);
     startTransition(() => {
       formAction({ selectedVariantId: defaultVariant.id, quantity });
     });
@@ -38,11 +38,28 @@ export function ProductInfo({ product }: { product: Product }) {
 
   const handleBuyNow = () => {
     if (!defaultVariant) return;
-    addCartItem(defaultVariant, product);
-    startTransition(() => {
-      formAction({ selectedVariantId: defaultVariant.id, quantity });
-      router.push('/checkout');
-    });
+    // Đi thẳng đến quy trình thanh toán riêng cho sản phẩm này, không dính líu giỏ hàng chung
+    const directItem = {
+      id: "direct-" + defaultVariant.id,
+      quantity: quantity,
+      cost: {
+        totalAmount: {
+          amount: (parseFloat(defaultVariant.price.amount) * quantity).toString(),
+          currencyCode: defaultVariant.price.currencyCode
+        }
+      },
+      merchandise: {
+        id: defaultVariant.id,
+        title: defaultVariant.title,
+        product: {
+          id: product.id,
+          title: product.title,
+          featuredImage: product.featuredImage
+        }
+      }
+    };
+    localStorage.setItem('direct_buy_item', JSON.stringify(directItem));
+    router.push(`/checkout?buyNow=1`);
   };
 
   return (

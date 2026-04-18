@@ -5,40 +5,73 @@ exports.createOrder = async (req, res) => {
   const client = await pool.connect();
   try {
     const userId = req.user.userId;
-    const { shippingAddress, phone, note, cartId } = req.body;
+    const { shippingAddress, phone, note, cartId, directItems } = req.body;
 
     if (!shippingAddress || !phone) {
       return res.status(400).json({ error: 'Vui lòng nhập địa chỉ và số điện thoại' });
     }
 
-    if (!cartId) {
-      return res.status(400).json({ error: 'Không tìm thấy thông tin giỏ hàng' });
+    if (!cartId && (!directItems || directItems.length === 0)) {
+      return res.status(400).json({ error: 'Không tìm thấy thông tin giỏ hàng hoặc sản phẩm thanh toán' });
     }
 
-    // Lấy cart items kèm thông tin sản phẩm
-    const itemsResult = await client.query(`
-      SELECT 
-        ci.id as cart_item_id,
-        ci.quantity,
-        p.id as product_id,
-        p.handle as product_handle,
-        p.title as product_title,
-        p.price_amount,
-        p.featured_image_url,
-        COALESCE(
-          (SELECT pi.url FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.position LIMIT 1),
-          p.featured_image_url
-        ) as image_url
-      FROM cart_items ci
-      JOIN products p ON ci.product_id = p.id
-      WHERE ci.cart_id = $1
-    `, [cartId]);
+    let items = [];
 
-    if (itemsResult.rows.length === 0) {
-      return res.status(400).json({ error: 'Giỏ hàng trống' });
+    if (directItems && directItems.length > 0) {
+      for (const item of directItems) {
+        const prodRes = await client.query(`
+          SELECT 
+            p.id as product_id,
+            p.handle as product_handle,
+            p.title as product_title,
+            p.price_amount,
+            COALESCE(
+              (SELECT pi.url FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.position LIMIT 1),
+              p.featured_image_url
+            ) as image_url
+          FROM product_variants pv
+          JOIN products p ON pv.product_id = p.id
+          WHERE pv.id = $1
+        `, [item.merchandiseId]);
+        
+        if (prodRes.rows.length > 0) {
+          const row = prodRes.rows[0];
+          items.push({
+            product_id: row.product_id,
+            product_handle: row.product_handle,
+            product_title: row.product_title,
+            price_amount: row.price_amount,
+            image_url: row.image_url,
+            quantity: item.quantity
+          });
+        }
+      }
+    } else {
+      const itemsResult = await client.query(`
+        SELECT 
+          ci.id as cart_item_id,
+          ci.quantity,
+          p.id as product_id,
+          p.handle as product_handle,
+          p.title as product_title,
+          p.price_amount,
+          p.featured_image_url,
+          COALESCE(
+            (SELECT pi.url FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.position LIMIT 1),
+            p.featured_image_url
+          ) as image_url
+        FROM cart_items ci
+        JOIN products p ON ci.product_id = p.id
+        WHERE ci.cart_id = $1
+      `, [cartId]);
+      
+      items = itemsResult.rows;
     }
 
-    const items = itemsResult.rows;
+    if (items.length === 0) {
+      return res.status(400).json({ error: 'Giỏ hàng trống hoặc sản phẩm không tồn tại' });
+    }
+
     const totalAmount = items.reduce((sum, item) => 
       sum + (parseFloat(item.price_amount) * item.quantity), 0
     );
@@ -70,8 +103,10 @@ exports.createOrder = async (req, res) => {
       ]);
     }
 
-    // Xóa cart items sau khi đặt hàng thành công
-    await client.query('DELETE FROM cart_items WHERE cart_id = $1', [cartId]);
+    // Xóa cart items sau khi đặt hàng thành công, trừ khi đây là Mua Ngay (hiển nhiên không có cartId hoặc không đụng đến cart)
+    if (cartId && (!directItems || directItems.length === 0)) {
+      await client.query('DELETE FROM cart_items WHERE cart_id = $1', [cartId]);
+    }
 
     await client.query('COMMIT');
 

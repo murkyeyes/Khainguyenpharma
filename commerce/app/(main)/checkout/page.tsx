@@ -24,6 +24,7 @@ export default function CheckoutPage() {
     phone: '',
     note: '',
   });
+  const [isBuyNow, setIsBuyNow] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
@@ -39,13 +40,25 @@ export default function CheckoutPage() {
   }, [router]);
 
   const fetchCart = async () => {
+    // Check buyNow directly from window.location
+    const searchParams = new URLSearchParams(window.location.search);
+    const isDirectBuy = searchParams.get('buyNow') === '1';
+    setIsBuyNow(isDirectBuy);
+
     try {
-      const data = await getCartAction();
-      if (data) {
-        setCart(data);
+      if (isDirectBuy) {
+        const directItem = JSON.parse(localStorage.getItem('direct_buy_item') || 'null');
+        if (directItem) {
+          setCart({ lines: [directItem] });
+        }
+      } else {
+        const data = await getCartAction();
+        if (data) {
+          setCart(data);
+        }
       }
     } catch {
-      setError('Không thể tải giỏ hàng');
+      setError('Không thể tải thông tin thanh toán');
     } finally {
       setLoading(false);
     }
@@ -63,13 +76,26 @@ export default function CheckoutPage() {
     const token = localStorage.getItem('user_token');
 
     try {
+      let bodyData;
+      if (isBuyNow) {
+        bodyData = {
+          ...form,
+          directItems: cart?.lines?.map((l: any) => ({
+            merchandiseId: l.merchandise.id,
+            quantity: l.quantity,
+          })),
+        };
+      } else {
+        bodyData = { ...form, cartId: cart?.id };
+      }
+
       const res = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...form, cartId: cart?.id }),
+        body: JSON.stringify(bodyData),
       });
 
       const data = await res.json();
