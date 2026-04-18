@@ -64,7 +64,7 @@ export default function UserMenu() {
             </Link>
           ) : (
             <Link 
-              href="/orders"
+              href="/auth/login"
               className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
             >
               $ My Orders
