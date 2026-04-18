@@ -9,6 +9,9 @@ const { registerSchema, loginSchema } = require('../validations/auth.schema');
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/login', validate(loginSchema), authController.login);
 
+// Email verification (Magic Link) — GET vì người dùng click từ email
+router.get('/verify', authController.verifyEmail);
+
 // Protected routes
 router.post('/logout', authenticate, authController.logout);
 router.get('/me', authenticate, authController.getMe);
