@@ -142,9 +142,14 @@ export default function OrdersPage() {
                     <div className="text-sm text-gray-500">
                        Giao đến: <span className="text-gray-900 font-medium">{order.shippingAddress}</span>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500 mb-1">Tổng tiền</p>
-                      <p className="text-xl font-bold text-teal-600">{formatPrice(order.totalAmount)}</p>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <p className="text-sm text-gray-500 mb-1">Tổng tiền</p>
+                        <p className="text-xl font-bold text-teal-600">{formatPrice(order.totalAmount)}</p>
+                      </div>
+                      <Link href={`/orders/${order.id}`} className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-teal-600 transition">
+                        Xem chi tiết
+                      </Link>
                     </div>
                   </div>
                 </div>
