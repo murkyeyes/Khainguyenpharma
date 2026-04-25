@@ -16,7 +16,9 @@ export default function UserMenu() {
       if (userInfoStr) {
         try {
           const userInfo = JSON.parse(userInfoStr);
-          setUserName(userInfo.name || userInfo.email?.split("@")[0] || "Account");
+          setUserName(
+            userInfo.name || userInfo.email?.split("@")[0] || "Account",
+          );
         } catch (e) {
           console.error("Corrupted user_info, clearing storage", e);
           localStorage.removeItem("user_token");
@@ -43,8 +45,7 @@ export default function UserMenu() {
 
   if (!mounted) {
     return (
-      <div className="hidden lg:flex items-center gap-3 w-32 h-10 animate-pulse bg-gray-100 rounded">
-      </div>
+      <div className="hidden lg:flex items-center gap-3 w-32 h-10 animate-pulse bg-gray-100 rounded"></div>
     );
   }
 
@@ -56,22 +57,22 @@ export default function UserMenu() {
         </button>
         <div className="absolute right-0 top-full w-48 bg-white border border-gray-100 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden transform origin-top group-hover:-translate-y-0.5">
           {userRole === "admin" ? (
-            <Link 
-              href="/admin/dashboard" 
+            <Link
+              href="/admin/dashboard"
               className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
             >
               # Admin
             </Link>
           ) : (
-            <Link 
-              href="/auth/login"
+            <Link
+              href="/orders"
               className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
             >
               $ My Orders
             </Link>
           )}
           <div className="h-px bg-gray-100 w-full" />
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
           >

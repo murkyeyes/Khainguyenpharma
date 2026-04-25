@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default function UserMenuMobile({ closeMenu }: { closeMenu: () => void }) {
+export default function UserMenuMobile({
+  closeMenu,
+}: {
+  closeMenu: () => void;
+}) {
   const [userName, setUserName] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -16,8 +20,10 @@ export default function UserMenuMobile({ closeMenu }: { closeMenu: () => void })
       if (userInfoStr) {
         try {
           const userInfo = JSON.parse(userInfoStr);
-          setUserName(userInfo.name || userInfo.email?.split("@")[0] || "Account");
-        } catch(e) {
+          setUserName(
+            userInfo.name || userInfo.email?.split("@")[0] || "Account",
+          );
+        } catch (e) {
           console.error("Corrupted user_info, clearing storage");
           localStorage.removeItem("user_token");
           localStorage.removeItem("admin_token");
@@ -64,7 +70,7 @@ export default function UserMenuMobile({ closeMenu }: { closeMenu: () => void })
             </li>
           ) : (
             <li className="py-2 text-lg text-black transition-colors hover:text-blue-600">
-              <Link href="/auth/login" onClick={closeMenu}>
+              <Link href="/orders" onClick={closeMenu}>
                 $ My Orders
               </Link>
             </li>
