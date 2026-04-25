@@ -7,6 +7,7 @@ import { getProduct, getProductRecommendations } from "lib/api";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import Link from "next/link";
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
@@ -81,14 +82,18 @@ export default async function ProductPage(props: {
           __html: JSON.stringify(productJsonLd),
         }}
       />
-      
+
       {/* Breadcrumb */}
       <div className="bg-gray-100 py-3">
         <div className="container mx-auto px-4">
           <nav className="text-sm text-gray-600">
-            <a href="/" className="hover:text-blue-600">Trang chủ</a>
+            <Link href="/" className="hover:text-blue-600">
+              Trang chủ
+            </Link>
             <span className="mx-2">/</span>
-            <a href="/search" className="hover:text-blue-600">Sản phẩm</a>
+            <Link href="/search" className="hover:text-blue-600">
+              Sản phẩm
+            </Link>
             <span className="mx-2">/</span>
             <span className="text-gray-800">{product.title}</span>
           </nav>
@@ -121,8 +126,8 @@ export default async function ProductPage(props: {
           </div>
 
           {/* Product Tabs - Description, Reviews, Related */}
-          <ProductTabs 
-            description={product.description} 
+          <ProductTabs
+            description={product.description}
             descriptionHtml={product.descriptionHtml}
           />
 
