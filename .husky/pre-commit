@@ -1,2 +1,3 @@
+#!/bin/sh
 cd commerce
 npx lint-staged
