@@ -14,9 +14,13 @@ import { redirect } from "next/navigation";
 
 export async function addItem(
   prevState: any,
-  payload: string | { selectedVariantId: string | undefined; quantity: number } | undefined
+  payload:
+    | string
+    | { selectedVariantId: string | undefined; quantity: number }
+    | undefined,
 ) {
-  const selectedVariantId = typeof payload === "string" ? payload : payload?.selectedVariantId;
+  const selectedVariantId =
+    typeof payload === "string" ? payload : payload?.selectedVariantId;
   const quantity = typeof payload === "string" ? 1 : payload?.quantity || 1;
 
   if (!selectedVariantId) {
@@ -59,7 +63,7 @@ export async function removeItem(prevState: any, merchandiseId: string) {
     }
 
     const lineItem = cart.lines.find(
-      (line) => line.merchandise.id === merchandiseId
+      (line) => line.merchandise.id === merchandiseId,
     );
 
     if (lineItem && lineItem.id) {
@@ -78,7 +82,7 @@ export async function updateItemQuantity(
   payload: {
     merchandiseId: string;
     quantity: number;
-  }
+  },
 ) {
   const { merchandiseId, quantity } = payload;
 
@@ -96,7 +100,7 @@ export async function updateItemQuantity(
     }
 
     const lineItem = cart.lines.find(
-      (line) => line.merchandise.id === merchandiseId
+      (line) => line.merchandise.id === merchandiseId,
     );
 
     if (lineItem && lineItem.id) {
@@ -125,15 +129,15 @@ export async function updateItemQuantity(
 
 export async function redirectToCheckout() {
   const cartId = (await cookies()).get("cartId")?.value;
-  
+
   if (!cartId) {
     return;
   }
 
   let cart = await getCart(cartId);
-  
+
   if (cart) {
-    redirect(cart.checkoutUrl);
+    redirect("/checkout");
   }
 }
 
