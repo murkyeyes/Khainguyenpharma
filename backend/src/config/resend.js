@@ -109,6 +109,7 @@ const sendVerificationEmail = async (to, username, token) => {
     return { success: true, data };
 
   } catch (error) {
+    
     console.error('Failed to send verification email:', error);
     return { success: false, error };
   }

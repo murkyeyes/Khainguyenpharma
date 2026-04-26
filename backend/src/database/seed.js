@@ -145,7 +145,7 @@ async function seedData() {
       
       // Auto-detect image extension
       const imageExt = getImageExtension(product.handle);
-      const imageUrl = `http://localhost:3001/uploads/products/${product.handle}/main.${imageExt}`;
+      const imageUrl = `https://res.cloudinary.com/dssivkccb/image/upload/${product.handle}_main.${imageExt}`;
       
       await pool.query(`
         INSERT INTO products (id, handle, title, description, price_amount, price_currency, available_for_sale, featured_image_url, featured_image_alt)
