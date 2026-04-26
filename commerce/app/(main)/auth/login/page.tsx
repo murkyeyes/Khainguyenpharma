@@ -26,7 +26,8 @@ function LoginForm() {
   useEffect(() => {
     const checkAuth = async () => {
       const token =
-        localStorage.getItem("user_token") || localStorage.getItem("admin_token");
+        localStorage.getItem("user_token") ||
+        localStorage.getItem("admin_token");
       const userRole = localStorage.getItem("user_role");
       const userInfo = localStorage.getItem("user_info");
 
@@ -141,7 +142,7 @@ function LoginForm() {
             <div className="flex justify-center mb-3">
               <div className="bg-white/20 rounded-full p-2">
                 <Image
-                  src="https://khainguyenpharma.onrender.com/uploads/products/logo.png"
+                  src="https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
                   alt="KXN Pharma"
                   width={120}
                   height={40}

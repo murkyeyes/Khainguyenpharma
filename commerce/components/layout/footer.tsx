@@ -6,8 +6,9 @@ import { getMenu } from "lib/api";
 import { Suspense } from "react";
 
 const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
-const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
-const COMPANY_NAME = process.env?.COMPANY_NAME || 'Khải Nguyên Pharma';
+const backendUrl =
+  NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
+const COMPANY_NAME = process.env?.COMPANY_NAME || "Khải Nguyên Pharma";
 
 const skeleton = "w-full h-6 animate-pulse rounded-sm bg-neutral-200";
 
@@ -32,7 +33,9 @@ export default async function Footer() {
             href="/"
           >
             <Image
-              src={`${backendUrl}/uploads/products/logo.png`}
+              src={
+                "https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+              }
               alt={SITE_NAME || "Khải Nguyên Pharma"}
               width={180}
               height={60}

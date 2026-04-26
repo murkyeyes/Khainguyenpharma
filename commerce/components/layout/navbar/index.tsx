@@ -9,7 +9,8 @@ import Search, { SearchSkeleton } from "./search";
 import UserMenu from "./user-menu";
 
 const { SITE_NAME, NEXT_PUBLIC_BACKEND_URL } = process.env;
-const backendUrl = NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
+const backendUrl =
+  NEXT_PUBLIC_BACKEND_URL || "https://khainguyenpharma.onrender.com";
 
 export async function Navbar() {
   const menu = await getMenu("next-js-frontend-header-menu");
@@ -27,7 +28,9 @@ export async function Navbar() {
                 className="flex items-center hover:opacity-80 transition-opacity"
               >
                 <Image
-                  src={`${backendUrl}/uploads/products/logo.png`}
+                  src={
+                    "https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+                  }
                   alt={SITE_NAME || "Khải Nguyên Pharma"}
                   width={200}
                   height={50}
@@ -99,16 +102,44 @@ export async function Navbar() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center gap-6 text-sm">
-              <Link href="/about-us" className="text-white hover:text-blue-200 transition-colors">Giới Thiệu</Link>
-              <Link href="/careers" className="text-white hover:text-blue-200 transition-colors">Tuyển Dụng</Link>
-              <Link href="/contact" className="text-white hover:text-blue-200 transition-colors">Liên Hệ</Link>
-              <Link href="/search" className="text-white hover:text-blue-200 transition-colors">Sản Phẩm</Link>
-              <Link href="/services" className="text-white hover:text-blue-200 transition-colors">Dịch Vụ</Link>
-              <Link href="/help" className="text-white hover:text-blue-200 transition-colors">Trợ Giúp</Link>
+              <Link
+                href="/about-us"
+                className="text-white hover:text-blue-200 transition-colors"
+              >
+                Giới Thiệu
+              </Link>
+              <Link
+                href="/careers"
+                className="text-white hover:text-blue-200 transition-colors"
+              >
+                Tuyển Dụng
+              </Link>
+              <Link
+                href="/contact"
+                className="text-white hover:text-blue-200 transition-colors"
+              >
+                Liên Hệ
+              </Link>
+              <Link
+                href="/search"
+                className="text-white hover:text-blue-200 transition-colors"
+              >
+                Sản Phẩm
+              </Link>
+              <Link
+                href="/services"
+                className="text-white hover:text-blue-200 transition-colors"
+              >
+                Dịch Vụ
+              </Link>
+              <Link
+                href="/help"
+                className="text-white hover:text-blue-200 transition-colors"
+              >
+                Trợ Giúp
+              </Link>
             </div>
-            <div className="text-white text-sm">
-              📞 HOTLINE: 0779 085 855
-            </div>
+            <div className="text-white text-sm">📞 HOTLINE: 0779 085 855</div>
           </div>
         </div>
       </div>
