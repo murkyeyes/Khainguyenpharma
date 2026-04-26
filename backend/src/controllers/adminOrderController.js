@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const { sendOrderCancelEmail } = require('../config/resend');
 
 const STATUS_LABELS = {
   pending: 'Chờ xử lý',
@@ -138,34 +139,59 @@ exports.getOrderDetail = async (req, res) => {
 
 // Cập nhật trạng thái đơn hàng
 exports.updateOrderStatus = async (req, res) => {
+  let client;
   try {
+    client = await pool.connect();
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, reason } = req.body;
+    let adminId = null;
+    if (req.user && req.user.id) adminId = req.user.id;
 
-    if (!STATUS_LABELS[status]) {
-      return res.status(400).json({ 
-        error: `Status không hợp lệ. Chỉ chấp nhận: ${Object.keys(STATUS_LABELS).join(', ')}` 
-      });
+    if (!STATUS_LABELS[status]) return res.status(400).json({ error: "Invalid status" });
+
+    await client.query("BEGIN");
+
+    const currentOrderResult = await client.query(
+      "SELECT o.*, u.email as user_email, u.full_name as user_name FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = $1",
+      [id]
+    );
+
+    if (currentOrderResult.rows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Not found" });
     }
 
-    const result = await pool.query(`
-      UPDATE orders 
-      SET status = $1, updated_at = CURRENT_TIMESTAMP 
-      WHERE id = $2 
-      RETURNING *
-    `, [status, id]);
+    const currentOrder = currentOrderResult.rows[0];
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
+    if (currentOrder.status !== status) {
+      if (status === "cancelled") {
+        const itemsResult = await client.query("SELECT product_id, quantity FROM order_items WHERE order_id = $1", [id]);
+        for (let item of itemsResult.rows) {
+          await client.query("UPDATE products SET stock_quantity = COALESCE(stock_quantity, 100) + $1 WHERE id = $2", [item.quantity, item.product_id]);
+        }
+        if (currentOrder.user_email) {
+          await sendOrderCancelEmail(currentOrder.user_email, currentOrder.user_name || "Qu? kh�ch", id, reason);
+        }
+      }
+
+      const result = await client.query("UPDATE orders SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *", [status, id]);
+
+      await client.query("INSERT INTO order_logs (order_id, admin_id, action, reason) VALUES ($1, $2, $3, $4)", 
+        [id, adminId, "�?i tr?ng th�i t? " + currentOrder.status + " -> " + status, reason || ""]);
+
+      await client.query("COMMIT");
+
+      res.json({ message: "Updated", order: { id: result.rows[0].id, status, statusLabel: STATUS_LABELS[status] } });
+    } else {
+      await client.query("ROLLBACK");
+      res.json({ message: "No change needed", order: { id: currentOrder.id, status, statusLabel: STATUS_LABELS[status] } });
     }
-
-    res.json({
-      message: `Cập nhật trạng thái thành "${STATUS_LABELS[status]}"`,
-      order: { id: result.rows[0].id, status, statusLabel: STATUS_LABELS[status] }
-    });
   } catch (error) {
-    console.error('Update order status error:', error);
-    res.status(500).json({ error: 'Lỗi cập nhật trạng thái' });
+    if (client) await client.query("ROLLBACK");
+    console.error("Update error:", error);
+    res.status(500).json({ error: "Update failed" });
+  } finally {
+    if (client) client.release();
   }
 };
 
