@@ -142,7 +142,7 @@ function LoginForm() {
             <div className="flex justify-center mb-3">
               <div className="bg-white/20 rounded-full p-2">
                 <Image
-                  src="https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+                  src="https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png"
                   alt="KXN Pharma"
                   width={120}
                   height={40}

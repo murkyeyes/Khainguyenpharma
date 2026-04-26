@@ -29,7 +29,7 @@ export async function Navbar() {
               >
                 <Image
                   src={
-                    "https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+                    "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png"
                   }
                   alt={SITE_NAME || "Khải Nguyên Pharma"}
                   width={200}

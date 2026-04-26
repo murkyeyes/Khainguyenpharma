@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Helper function to build the HTML content for the verification email
 const buildVerificationEmailHtml = (username, verificationLink) => {
-  const logoUrl = 'https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png';
+  const logoUrl = 'https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png';
   return `
     <!DOCTYPE html>
     <html lang="vi">
@@ -116,7 +116,7 @@ const sendVerificationEmail = async (to, username, token) => {
 };
 
 const buildCancelEmailHtml = (username, orderId, reason) => {
-  const logoUrl = 'https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png';
+  const logoUrl = 'https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png';
   return `
     <!DOCTYPE html>
     <html lang="vi">

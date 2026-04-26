@@ -27,7 +27,7 @@ export default function HomePage() {
         <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[21/9]">
           <Image
             src={
-              "https://res.cloudinary.com/dssivkccb/image/upload/v1740562627/khainguyenpharma_hero_banner_bshzke.png"
+              "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190516/khainguyen-pharma/static/hero_banner.png"
             }
             alt="Khải Nguyên Pharma Banner"
             fill
@@ -188,7 +188,7 @@ export default function HomePage() {
               <div className="relative h-64 overflow-hidden">
                 <Image
                   src={
-                    "https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+                    "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png"
                   }
                   alt="Sản phẩm chất lượng"
                   fill
@@ -231,7 +231,7 @@ export default function HomePage() {
               <div className="relative h-64 overflow-hidden">
                 <Image
                   src={
-                    "https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+                    "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png"
                   }
                   alt="Tư vấn chuyên nghiệp"
                   fill
@@ -274,7 +274,7 @@ export default function HomePage() {
               <div className="relative h-64 overflow-hidden">
                 <Image
                   src={
-                    "https://res.cloudinary.com/dssivkccb/image/upload/v1713330347/logo-letter-2_qrc8my.png"
+                    "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190512/khainguyen-pharma/static/logo.png"
                   }
                   alt="Giao hàng nhanh chóng"
                   fill
@@ -341,7 +341,7 @@ export default function HomePage() {
             >
               <Image
                 src={
-                  "https://res.cloudinary.com/dssivkccb/image/upload/v1740562627/slideshow_1_p7h0o5.jpg"
+                  "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190518/khainguyen-pharma/static/slideshow_1.png"
                 }
                 alt="Chất lượng"
                 fill
@@ -366,7 +366,7 @@ export default function HomePage() {
             >
               <Image
                 src={
-                  "https://res.cloudinary.com/dssivkccb/image/upload/v1740562627/slideshow_1_p7h0o5.jpg"
+                  "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190518/khainguyen-pharma/static/slideshow_1.png"
                 }
                 alt="Tầm nhìn"
                 fill
@@ -391,7 +391,7 @@ export default function HomePage() {
             >
               <Image
                 src={
-                  "https://res.cloudinary.com/dssivkccb/image/upload/v1740562627/slideshow_1_p7h0o5.jpg"
+                  "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190518/khainguyen-pharma/static/slideshow_1.png"
                 }
                 alt="Blog"
                 fill
@@ -416,7 +416,7 @@ export default function HomePage() {
             >
               <Image
                 src={
-                  "https://res.cloudinary.com/dssivkccb/image/upload/v1740562627/slideshow_1_p7h0o5.jpg"
+                  "https://res.cloudinary.com/dsslvkccb/image/upload/v1777190518/khainguyen-pharma/static/slideshow_1.png"
                 }
                 alt="Tin tức"
                 fill
