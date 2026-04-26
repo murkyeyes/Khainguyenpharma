@@ -210,7 +210,7 @@ const sendOrderCancelEmail = async (to, username, orderId, reason) => {
     const { data, error } = await resend.emails.send({
       from: 'Khai Nguyen Pharma <noreply@khainguyenpharma.com>',
       to: [to],
-      subject: \`[Khai Nguyên Pharma] Thông báo hủy đơn hàng #\${orderId.substring(0, 8)}\`,
+      subject: `[Khai Nguyên Pharma] Thông báo hủy đơn hàng #${orderId.substring(0, 8)}`,
       html: htmlContent,
     });
 
