@@ -216,3 +216,58 @@ exports.getOrderById = async (req, res) => {
     res.status(500).json({ error: 'Lỗi lấy đơn hàng' });
   }
 };
+
+// Hủy đơn hàng (chỉ khi đang ở trạng thái pending)
+exports.cancelOrder = async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const userId = req.user.userId;
+    const { id } = req.params;
+
+    await client.query('BEGIN');
+
+    const orderResult = await client.query(
+      'SELECT * FROM orders WHERE id = $1 AND user_id = $2',
+      [id, userId]
+    );
+
+    if (orderResult.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
+    }
+
+    const order = orderResult.rows[0];
+
+    if (order.status !== 'pending') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Chỉ có thể hủy đơn hàng đang chờ xử lý' });
+    }
+
+    // Hoàn lại số lượng tồn kho
+    const itemsResult = await client.query(
+      'SELECT product_id, quantity FROM order_items WHERE order_id = $1',
+      [id]
+    );
+    for (const item of itemsResult.rows) {
+      await client.query(
+        'UPDATE products SET stock_quantity = COALESCE(stock_quantity, 100) + $1 WHERE id = $2',
+        [item.quantity, item.product_id]
+      );
+    }
+
+    await client.query(
+      "UPDATE orders SET status = 'cancelled', updated_at = CURRENT_TIMESTAMP WHERE id = $1",
+      [id]
+    );
+
+    await client.query('COMMIT');
+
+    res.json({ message: 'Đã hủy đơn hàng thành công' });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Cancel order error:', error);
+    res.status(500).json({ error: 'Lỗi hủy đơn hàng' });
+  } finally {
+    client.release();
+  }
+};
