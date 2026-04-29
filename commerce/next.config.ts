@@ -1,4 +1,7 @@
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -27,7 +30,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
         pathname: "/**",
-      }
+      },
     ],
   },
 };

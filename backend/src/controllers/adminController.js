@@ -23,6 +23,7 @@ exports.createProduct = async (req, res) => {
       availableForSale = true,
       priceAmount,
       priceCurrency = 'VND',
+      stockQuantity,
       collectionIds = []
     } = req.body;
 
@@ -43,10 +44,10 @@ exports.createProduct = async (req, res) => {
     const productResult = await client.query(
       `INSERT INTO products (
         handle, title, description, description_html, 
-        available_for_sale, price_amount, price_currency
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        available_for_sale, price_amount, price_currency, stock_quantity
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *`,
-      [handle, title, description, descriptionHtml, availableForSale, priceAmount, priceCurrency]
+      [handle, title, description, descriptionHtml, availableForSale, priceAmount, priceCurrency, stockQuantity !== undefined ? stockQuantity : 100]
     );
 
     const product = productResult.rows[0];
@@ -99,6 +100,7 @@ exports.updateProduct = async (req, res) => {
       availableForSale,
       priceAmount,
       priceCurrency,
+      stockQuantity,
       collectionIds
     } = req.body;
 
@@ -140,6 +142,10 @@ exports.updateProduct = async (req, res) => {
     if (priceCurrency !== undefined) {
       updates.push(`price_currency = $${paramCount++}`);
       values.push(priceCurrency);
+    }
+    if (stockQuantity !== undefined) {
+      updates.push(`stock_quantity = $${paramCount++}`);
+      values.push(stockQuantity);
     }
 
     updates.push(`updated_at = CURRENT_TIMESTAMP`);

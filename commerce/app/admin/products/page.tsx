@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -11,11 +11,12 @@ interface Product {
   price_currency?: string;
   available_for_sale?: boolean;
   availableForSale?: boolean;
+  stockQuantity?: number;
   priceRange?: {
     maxVariantPrice: {
       amount: string;
       currencyCode: string;
-    }
+    };
   };
   images: any[];
 }
@@ -23,7 +24,7 @@ interface Product {
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -31,11 +32,13 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('https://khainguyenpharma.onrender.com/api/products');
+      const response = await fetch(
+        "https://khainguyenpharma.onrender.com/api/products",
+      );
       const data = await response.json();
       setProducts(data.products || []);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
@@ -47,28 +50,32 @@ export default function AdminProductsPage() {
     }
 
     try {
-      const token = localStorage.getItem('admin_token');
-      const response = await fetch(`https://khainguyenpharma.onrender.com/api/admin/products/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(
+        `https://khainguyenpharma.onrender.com/api/admin/products/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Xóa sản phẩm thất bại');
+        throw new Error("Xóa sản phẩm thất bại");
       }
 
-      alert('Xóa sản phẩm thành công!');
+      alert("Xóa sản phẩm thành công!");
       fetchProducts(); // Reload list
     } catch (error: any) {
       alert(error.message);
     }
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.handle.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.handle.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   if (loading) {
@@ -85,7 +92,9 @@ export default function AdminProductsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Quản lý sản phẩm</h1>
-          <p className="text-gray-600 mt-1">Tổng cộng {products.length} sản phẩm</p>
+          <p className="text-gray-600 mt-1">
+            Tổng cộng {products.length} sản phẩm
+          </p>
         </div>
         <Link
           href="/admin/products/new"
@@ -125,6 +134,9 @@ export default function AdminProductsPage() {
                 Giá
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tồn kho
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Trạng thái
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -135,7 +147,10 @@ export default function AdminProductsPage() {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredProducts.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td
+                  colSpan={7}
+                  className="px-6 py-12 text-center text-gray-500"
+                >
                   Không tìm thấy sản phẩm nào
                 </td>
               </tr>
@@ -144,31 +159,49 @@ export default function AdminProductsPage() {
                 <tr key={product.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <img
-                      src={product.images?.[0]?.url || '/placeholder.jpg'}
+                      src={product.images?.[0]?.url || "/placeholder.jpg"}
                       alt={product.title}
                       className="h-16 w-16 object-cover rounded"
                     />
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">{product.title}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {product.title}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-600">{product.handle}</div>
+                    <div className="text-sm text-gray-600">
+                      {product.handle}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {parseInt(product.priceRange?.maxVariantPrice?.amount || product.price_amount || '0').toLocaleString('vi-VN')} {product.priceRange?.maxVariantPrice?.currencyCode || product.price_currency || 'VND'}
+                      {parseInt(
+                        product.priceRange?.maxVariantPrice?.amount ||
+                          product.price_amount ||
+                          "0",
+                      ).toLocaleString("vi-VN")}{" "}
+                      {product.priceRange?.maxVariantPrice?.currencyCode ||
+                        product.price_currency ||
+                        "VND"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">
+                      {product.stockQuantity ?? "—"}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         (product.availableForSale ?? product.available_for_sale)
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {(product.availableForSale ?? product.available_for_sale) ? 'Còn hàng' : 'Hết hàng'}
+                      {(product.availableForSale ?? product.available_for_sale)
+                        ? "Còn hàng"
+                        : "Hết hàng"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

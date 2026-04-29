@@ -63,6 +63,7 @@ exports.getAllProducts = async (req, res) => {
         handle: row.handle,
         title: row.title,
         description: row.description,
+        stockQuantity: row.stock_quantity,
         availableForSale: row.available_for_sale,
         priceRange: {
           maxVariantPrice: {
@@ -147,6 +148,7 @@ exports.getProductByHandle = async (req, res) => {
       description: row.description,
       descriptionHtml: row.description_html || `<p>${row.description || ''}</p>`,
       availableForSale: row.available_for_sale,
+      stockQuantity: row.stock_quantity,
       priceRange: {
         maxVariantPrice: {
           amount: row.price_amount.toString(),

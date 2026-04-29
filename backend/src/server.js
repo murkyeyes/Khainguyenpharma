@@ -37,6 +37,7 @@ app.use('/api/collections', require('./routes/collections'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/pages', require('./routes/pages'));
+app.use('/api/blog', require('./routes/blog'));
 app.use('/api/menu', require('./routes/menu'));
 
 // Health check

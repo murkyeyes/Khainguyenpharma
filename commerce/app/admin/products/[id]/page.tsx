@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -14,12 +14,13 @@ export default function EditProductPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [product, setProduct] = useState<any>(null);
   const [formData, setFormData] = useState({
-    handle: '',
-    title: '',
-    description: '',
-    descriptionHtml: '',
-    priceAmount: '',
-    priceCurrency: 'VND',
+    handle: "",
+    title: "",
+    description: "",
+    descriptionHtml: "",
+    priceAmount: "",
+    priceCurrency: "VND",
+    stockQuantity: "",
     availableForSale: true,
     collectionIds: [] as string[],
   });
@@ -34,35 +35,41 @@ export default function EditProductPage() {
 
   const fetchCollections = async () => {
     try {
-      const response = await fetch('https://khainguyenpharma.onrender.com/api/collections');
+      const response = await fetch(
+        "https://khainguyenpharma.onrender.com/api/collections",
+      );
       const data = await response.json();
       setCollections(data.collections || []);
     } catch (error) {
-      console.error('Error fetching collections:', error);
+      console.error("Error fetching collections:", error);
     }
   };
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`https://khainguyenpharma.onrender.com/api/products/${productId}`);
+      const response = await fetch(
+        `https://khainguyenpharma.onrender.com/api/products/${productId}`,
+      );
       const data = await response.json();
-      
+
       setProduct(data.product);
       setFormData({
         handle: data.product.handle,
         title: data.product.title,
-        description: data.product.description || '',
-        descriptionHtml: data.product.descriptionHtml || '',
+        description: data.product.description || "",
+        descriptionHtml: data.product.descriptionHtml || "",
         priceAmount: data.product.priceRange.maxVariantPrice.amount,
         priceCurrency: data.product.priceRange.maxVariantPrice.currencyCode,
+        stockQuantity: data.product.stockQuantity?.toString() || "",
         availableForSale: data.product.availableForSale,
-        collectionIds: data.product.collections?.map((c: any) => c.handle) || [],
+        collectionIds:
+          data.product.collections?.map((c: any) => c.handle) || [],
       });
       setCurrentImages(data.product.images || []);
     } catch (error) {
-      console.error('Error fetching product:', error);
-      alert('Không tìm thấy sản phẩm');
-      router.push('/admin/products');
+      console.error("Error fetching product:", error);
+      alert("Không tìm thấy sản phẩm");
+      router.push("/admin/products");
     } finally {
       setLoading(false);
     }
@@ -82,9 +89,9 @@ export default function EditProductPage() {
       setSelectedImages(files);
 
       // Clean up old previews
-      imagePreviews.forEach(p => URL.revokeObjectURL(p));
-      
-      const newPreviews = files.map(file => URL.createObjectURL(file));
+      imagePreviews.forEach((p) => URL.revokeObjectURL(p));
+
+      const newPreviews = files.map((file) => URL.createObjectURL(file));
       setImagePreviews(newPreviews);
     }
   };
@@ -94,21 +101,24 @@ export default function EditProductPage() {
     setSaving(true);
 
     try {
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
 
       // 1. Update product
-      const productResponse = await fetch(`https://khainguyenpharma.onrender.com/api/admin/products/${product.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+      const productResponse = await fetch(
+        `https://khainguyenpharma.onrender.com/api/admin/products/${product.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       if (!productResponse.ok) {
         const error = await productResponse.json();
-        throw new Error(error.error || 'Cập nhật sản phẩm thất bại');
+        throw new Error(error.error || "Cập nhật sản phẩm thất bại");
       }
 
       // 2. Upload new images if selected
@@ -117,45 +127,47 @@ export default function EditProductPage() {
         for (let i = 0; i < selectedImages.length; i++) {
           const file = selectedImages[i];
           if (!file) continue;
-          
+
           const imageFormData = new FormData();
-          imageFormData.append('image', file);
-          
+          imageFormData.append("image", file);
+
           // Determine type based on order and existing images
           // If no existing images and this is the first image, make it 'main'
           const existingCount = currentImages.length;
-          let imgType = 'main';
+          let imgType = "main";
           if (existingCount > 0 || i > 0) {
-             imgType = `detail-${Date.now()}-${i}`;
+            imgType = `detail-${Date.now()}-${i}`;
           }
-          
-          imageFormData.append('imageType', imgType);
-          imageFormData.append('altText', formData.title);
+
+          imageFormData.append("imageType", imgType);
+          imageFormData.append("altText", formData.title);
 
           const imageResponse = await fetch(
             `https://khainguyenpharma.onrender.com/api/admin/products/${formData.handle}/images`,
             {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Authorization': `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
               body: imageFormData,
-            }
+            },
           );
 
           if (!imageResponse.ok) {
             try {
               const errData = await imageResponse.json();
               console.error(`Image ${file.name} upload failed:`, errData);
-            } catch(e) {
-              console.error(`Image ${file.name} upload failed, status: ${imageResponse.status}`);
+            } catch (e) {
+              console.error(
+                `Image ${file.name} upload failed, status: ${imageResponse.status}`,
+              );
             }
           }
         }
       }
 
-      alert('Cập nhật sản phẩm thành công!');
-      router.push('/admin/products');
+      alert("Cập nhật sản phẩm thành công!");
+      router.push("/admin/products");
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -188,7 +200,10 @@ export default function EditProductPage() {
         <p className="text-gray-600 mt-1">{product?.title}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-lg shadow-md p-6 space-y-6"
+      >
         {/* Handle */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -198,7 +213,9 @@ export default function EditProductPage() {
             type="text"
             required
             value={formData.handle}
-            onChange={(e) => setFormData({ ...formData, handle: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, handle: e.target.value })
+            }
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -212,7 +229,9 @@ export default function EditProductPage() {
             type="text"
             required
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -224,7 +243,9 @@ export default function EditProductPage() {
           </label>
           <textarea
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
             rows={3}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -237,7 +258,9 @@ export default function EditProductPage() {
           </label>
           <textarea
             value={formData.descriptionHtml}
-            onChange={(e) => setFormData({ ...formData, descriptionHtml: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, descriptionHtml: e.target.value })
+            }
             rows={6}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
           />
@@ -254,7 +277,9 @@ export default function EditProductPage() {
               required
               min="0"
               value={formData.priceAmount}
-              onChange={(e) => setFormData({ ...formData, priceAmount: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, priceAmount: e.target.value })
+              }
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -264,7 +289,9 @@ export default function EditProductPage() {
             </label>
             <select
               value={formData.priceCurrency}
-              onChange={(e) => setFormData({ ...formData, priceCurrency: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, priceCurrency: e.target.value })
+              }
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="VND">VND</option>
@@ -279,12 +306,34 @@ export default function EditProductPage() {
             type="checkbox"
             id="availableForSale"
             checked={formData.availableForSale}
-            onChange={(e) => setFormData({ ...formData, availableForSale: e.target.checked })}
+            onChange={(e) =>
+              setFormData({ ...formData, availableForSale: e.target.checked })
+            }
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
-          <label htmlFor="availableForSale" className="ml-2 block text-sm text-gray-900">
+          <label
+            htmlFor="availableForSale"
+            className="ml-2 block text-sm text-gray-900"
+          >
             Còn hàng
           </label>
+        </div>
+
+        {/* Stock Quantity */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Số lượng tồn kho
+          </label>
+          <input
+            type="number"
+            min="0"
+            value={formData.stockQuantity}
+            onChange={(e) =>
+              setFormData({ ...formData, stockQuantity: e.target.value })
+            }
+            className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="100"
+          />
         </div>
 
         {/* Collections */}
@@ -302,7 +351,10 @@ export default function EditProductPage() {
                   onChange={() => handleCollectionToggle(collection.handle)}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor={`collection-${collection.handle}`} className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor={`collection-${collection.handle}`}
+                  className="ml-2 block text-sm text-gray-900"
+                >
                   {collection.title}
                 </label>
               </div>
@@ -318,7 +370,12 @@ export default function EditProductPage() {
             </label>
             <div className="flex gap-4">
               {currentImages.map((img, idx) => (
-                <img key={idx} src={img.url} alt={img.altText} className="h-32 w-32 object-cover rounded-lg" />
+                <img
+                  key={idx}
+                  src={img.url}
+                  alt={img.altText}
+                  className="h-32 w-32 object-cover rounded-lg"
+                />
               ))}
             </div>
           </div>
@@ -333,7 +390,12 @@ export default function EditProductPage() {
             {imagePreviews.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-4">
                 {imagePreviews.map((preview, idx) => (
-                   <img key={idx} src={preview} alt={`Preview ${idx}`} className="h-32 w-32 object-cover rounded-lg" />
+                  <img
+                    key={idx}
+                    src={preview}
+                    alt={`Preview ${idx}`}
+                    className="h-32 w-32 object-cover rounded-lg"
+                  />
                 ))}
               </div>
             )}
@@ -344,7 +406,9 @@ export default function EditProductPage() {
               onChange={handleImageSelect}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
-            <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF lên đến 5MB, có thể chọn nhiều file cùng lúc</p>
+            <p className="text-xs text-gray-500 mt-1">
+              PNG, JPG, GIF lên đến 5MB, có thể chọn nhiều file cùng lúc
+            </p>
           </div>
         </div>
 
@@ -362,7 +426,11 @@ export default function EditProductPage() {
             disabled={saving || uploadingImage}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {saving ? (uploadingImage ? 'Đang upload ảnh...' : 'Đang lưu...') : 'Lưu thay đổi'}
+            {saving
+              ? uploadingImage
+                ? "Đang upload ảnh..."
+                : "Đang lưu..."
+              : "Lưu thay đổi"}
           </button>
         </div>
       </form>
