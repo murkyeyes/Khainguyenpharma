@@ -26,6 +26,42 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
 });
 
+const contentImageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+// Upload image for product rich content
+exports.uploadProductContentImage = [
+  contentImageUpload.single('image'),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'Không có ảnh upload' });
+      }
+
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'khainguyen-pharma/products/content',
+            public_id: `content-${Date.now()}`,
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+
+      res.json({ imageUrl: result.secure_url });
+    } catch (error) {
+      console.error('Upload product content image error:', error);
+      res.status(500).json({ error: 'Lỗi upload ảnh nội dung sản phẩm' });
+    }
+  }
+];
+
 // Upload product image endpoint
 exports.uploadProductImage = [
   upload.single('image'),

@@ -39,6 +39,37 @@ exports.getAllBlogPosts = async (req, res) => {
   }
 };
 
+// Admin: upload ảnh nội dung blog
+exports.uploadContentImage = [
+  upload.single('image'),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'Không có ảnh upload' });
+      }
+
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'khainguyen-pharma/blog/content',
+            public_id: `content-${Date.now()}`,
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+
+      res.json({ imageUrl: result.secure_url });
+    } catch (error) {
+      console.error('Upload blog content image error:', error);
+      res.status(500).json({ error: 'Lỗi upload ảnh nội dung blog' });
+    }
+  }
+];
+
 // Admin: tạo bài viết mới
 exports.createBlogPost = [
   upload.single('image'),

@@ -18,6 +18,7 @@ router.put('/products/:id', validate(updateProductSchema), adminController.updat
 router.delete('/products/:id', adminController.deleteProduct);
 
 // Image upload
+router.post('/products/content-images', uploadController.uploadProductContentImage);
 router.post('/products/:handle/images', uploadController.uploadProductImage);
 router.delete('/products/:handle/images/:filename', uploadController.deleteProductImage);
 router.get('/products/:handle/images', uploadController.getProductImages);
@@ -31,6 +32,7 @@ router.put('/orders/:id/status', adminOrderController.updateOrderStatus);
 // Blog management
 router.get('/blog', adminBlogController.getAllBlogPosts);
 router.post('/blog', adminBlogController.createBlogPost);
+router.post('/blog/content-images', adminBlogController.uploadContentImage);
 router.put('/blog/:id', adminBlogController.updateBlogPost);
 router.delete('/blog/:id', adminBlogController.deleteBlogPost);
 

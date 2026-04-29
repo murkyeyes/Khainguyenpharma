@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import RichTextEditor from "components/rich-text-editor";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://khainguyenpharma.onrender.com";
@@ -71,6 +72,26 @@ export default function EditBlogPostPage() {
       setSelectedImage(file);
       setImagePreview(URL.createObjectURL(file));
     }
+  };
+
+  const uploadEditorImage = async (file: File): Promise<string> => {
+    const token = localStorage.getItem("admin_token");
+    const body = new FormData();
+    body.append("image", file);
+
+    const res = await fetch(`${API_URL}/api/admin/blog/content-images`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body,
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || "Upload ảnh nội dung thất bại");
+    }
+
+    const data = await res.json();
+    return data.imageUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,19 +201,14 @@ export default function EditBlogPostPage() {
         </div>
 
         {/* Content */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Nội dung (HTML)
-          </label>
-          <textarea
-            value={formData.content}
-            onChange={(e) =>
-              setFormData({ ...formData, content: e.target.value })
-            }
-            rows={12}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-          />
-        </div>
+        <RichTextEditor
+          label="Nội dung bài viết"
+          value={formData.content}
+          onChange={(html) => setFormData({ ...formData, content: html })}
+          placeholder="Nhập nội dung bài viết như Facebook..."
+          onUploadImage={uploadEditorImage}
+          uploadButtonId="blog-edit-content-image"
+        />
 
         {/* Published */}
         <div className="flex items-center">

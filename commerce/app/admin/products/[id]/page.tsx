@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import RichTextEditor from "components/rich-text-editor";
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://khainguyenpharma.onrender.com";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -35,9 +39,7 @@ export default function EditProductPage() {
 
   const fetchCollections = async () => {
     try {
-      const response = await fetch(
-        "https://khainguyenpharma.onrender.com/api/collections",
-      );
+      const response = await fetch(`${API_URL}/api/collections`);
       const data = await response.json();
       setCollections(data.collections || []);
     } catch (error) {
@@ -47,9 +49,7 @@ export default function EditProductPage() {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(
-        `https://khainguyenpharma.onrender.com/api/products/${productId}`,
-      );
+      const response = await fetch(`${API_URL}/api/products/${productId}`);
       const data = await response.json();
 
       setProduct(data.product);
@@ -96,6 +96,26 @@ export default function EditProductPage() {
     }
   };
 
+  const uploadEditorImage = async (file: File): Promise<string> => {
+    const token = localStorage.getItem("admin_token");
+    const body = new FormData();
+    body.append("image", file);
+
+    const res = await fetch(`${API_URL}/api/admin/products/content-images`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body,
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || "Upload ảnh nội dung thất bại");
+    }
+
+    const data = await res.json();
+    return data.imageUrl;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -105,7 +125,7 @@ export default function EditProductPage() {
 
       // 1. Update product
       const productResponse = await fetch(
-        `https://khainguyenpharma.onrender.com/api/admin/products/${product.id}`,
+        `${API_URL}/api/admin/products/${product.id}`,
         {
           method: "PUT",
           headers: {
@@ -143,7 +163,7 @@ export default function EditProductPage() {
           imageFormData.append("altText", formData.title);
 
           const imageResponse = await fetch(
-            `https://khainguyenpharma.onrender.com/api/admin/products/${formData.handle}/images`,
+            `${API_URL}/api/admin/products/${formData.handle}/images`,
             {
               method: "POST",
               headers: {
@@ -252,19 +272,16 @@ export default function EditProductPage() {
         </div>
 
         {/* Description HTML */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Mô tả chi tiết (HTML)
-          </label>
-          <textarea
-            value={formData.descriptionHtml}
-            onChange={(e) =>
-              setFormData({ ...formData, descriptionHtml: e.target.value })
-            }
-            rows={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-          />
-        </div>
+        <RichTextEditor
+          label="Mô tả chi tiết"
+          value={formData.descriptionHtml}
+          onChange={(html) =>
+            setFormData({ ...formData, descriptionHtml: html })
+          }
+          placeholder="Nhập mô tả chi tiết sản phẩm như Facebook..."
+          onUploadImage={uploadEditorImage}
+          uploadButtonId="product-edit-content-image"
+        />
 
         {/* Price */}
         <div className="grid grid-cols-2 gap-4">
