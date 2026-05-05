@@ -63,6 +63,12 @@ DB_NAME=khainguyen_pharma
 DB_USER=postgres
 DB_PASSWORD=YOUR_POSTGRES_PASSWORD_HERE
 
+# Supabase / Cloudinary (Tùy chọn)
+# DATABASE_URL=postgresql://...
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+
 PORT=3001
 NODE_ENV=development
 
@@ -503,7 +509,7 @@ Nếu gặp vấn đề, check:
 
 ---
 
-## ✅ CHECKLIST KHI CHẠY LẦN ĐẦU
+##  CHECKLIST KHI CHẠY 
 
 - [ ] Đã cài PostgreSQL
 - [ ] Đã tạo database `khainguyen_pharma`
@@ -520,7 +526,7 @@ Nếu gặp vấn đề, check:
 
 ---
 
-**🎉 Chúc bạn thành công!**
+
 
 Nếu mọi thứ hoạt động, bạn sẽ có một hệ thống E-commerce hoàn chỉnh với:
 - ✅ Backend REST API

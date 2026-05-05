@@ -1,1 +1,0 @@
-﻿const pool = require('./src/config/database'); pool.query("SELECT column_name FROM information_schema.columns WHERE table_name = 'order_items'").then(r => console.log(r)).catch(console.error).finally(()=>process.exit(0))
